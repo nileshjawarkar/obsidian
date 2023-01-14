@@ -1,0 +1,30 @@
+- docker image ls
+	- List all the local images
+- docker image pull IMAGE-NAME
+	- Download image from repository
+- docker run --name CONTAINER_NAME IMAGE-NAME -it CMD_TO_RUN
+	- Create container and run the specified command
+	- Example
+		- docker run --name ubuntu-serv ubuntu:latest -it /bin/bash
+- ctrl + p + q
+	- Exit the container without killing it
+- docker exec -it CONTAINER_NAME CMD_TO_RUN
+- docker exec -it --user USER_NAME CONTAINER_NAME CMD_TO_RUN
+	- Execute perticular cmd in container
+	- Exmaple
+		- docker exec -it ubuntu-serv /bin/bash
+- docker stop CONTAINER_NAME
+	- Stop the container
+- docker start CONTAINER_NAME -it /bin/bash
+	- Start the container
+- docker ps 
+	- List runing docker containers
+- docker ps -a
+	- List all the docker containers
+- docker rm CONTAINER_NAME/CONTAINER_ID
+	- Remove container
+- docker image rm IMAGE_NAME/IMAGE_ID
+	- Remove image
+- docker build . -t IMAGE_NAME
+	- Build image from Docker file
+	- Run from current directory which has Dockerfile in it
