@@ -63,7 +63,7 @@ ProjectRoot
 
 ```
 
-5) Add webapp directory along with WEB-INF, META-INF directory under src/main as follows. 
+5) Add webapp directory under src/main. Under webapp directory create WEB-INF directory. Add META-INF directory under "src/main/resources". 
 ```
 ProjectRoot
 	|
@@ -74,15 +74,19 @@ ProjectRoot
 			+-- java
 			|
 			+-- resources
+				|
+				+-- META-INF
+					|
+					+-- persistence.xml			
 			|
 			+-- webapp
 				|
 				+-- WEB-INF
 					|
 					+-- beans.xml
-				+-- META-INF
 					|
-					+-- persistence.xml
+					+-- web.xml
+
 
 ```
 
@@ -97,7 +101,7 @@ bean-discovery-mode="all">
 </beans>
 ```
 
-7) Add following content to the persistence.xml
+7) Add following content to the persistence.xml. Note persistence.xml must be added to "src/main/resources/META-INF" directory, otherwise we can face wired error like "Can't find a persistence unit named null in deployment".
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.2"
@@ -116,6 +120,22 @@ value="drop-and-create" />
 </persistence>
 ``` 
 
+8) Added following content to web.xml. Even if we do not add web.xml, in most cases it will work. But for sake of completeness, I am adding it. 
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web
+Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>
+<web-app>
+	<display-name>carman</display-name>
+</web-app>
+```
+
+9) Optional - When web.xml is not added please set following property in pom.xml
+``` xml
+<properties>
+	<failOnMissingWebXml>false</failOnMissingWebXml>
+</properties>
+```
 #### Now Java EE project is ready to work on. Happy learning.
 
 

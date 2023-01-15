@@ -1,0 +1,2 @@
+
+Server-Sent Events (SSE) is an HTTP based specification that provides a way to establish a long-running and mono-channel connection from the server to the client. The client initiates the SSE connection by using the media type _text/event-stream_ in the _Accept_ header. Later, it gets updated automatically without requesting the server.
