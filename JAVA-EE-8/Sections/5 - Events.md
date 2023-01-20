@@ -18,7 +18,7 @@ public class CarCreated {
 }
 ```
 
-- Producer
+- Producer "CarManufacturer" - "createCar" method will fire the event.
 ``` java
 @Stateless
 public class CarManufacturer {
@@ -41,7 +41,8 @@ public class CarManufacturer {
 	}
 }
 ```
-- Listener
+
+- Listener - This class will handle the fired event.
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
