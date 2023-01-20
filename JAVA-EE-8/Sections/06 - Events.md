@@ -1,3 +1,5 @@
+This is one of the most powerful feature of JavaEE.  It helps to develop decoupled application as component can send data to another component without any form of relation between them.
+
  ***Synchronous CDI events***
  ***Implemented using : Event<\T> and @Observes***
  

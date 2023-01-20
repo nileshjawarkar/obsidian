@@ -1,4 +1,4 @@
-Interceptors is one of the way to execute cross cutting concerns. Cross cutting concerns is the functionality which is not part of business domain. Such as you want track favourite color. Such functionality should be implemented by using interceptors.
+As name suggest interceptors intercept request. Interceptors is one of the way to execute cross cutting concerns. Cross cutting concerns is the functionality which is not part of business domain. Such as you want track favourite color. Such functionality should be implemented by using interceptors.
 
 - Add decorate method with @Interceptors annotation  
 ``` java
