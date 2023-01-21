@@ -97,9 +97,9 @@ public Car createCar(final Specification spec) {
 	final Car car = this.carFactory.createCar(spec);
 	this.entityManager.persist(car);
 	if (car.getEngineType() == EngineType.ELECTRIC) {
-		this.newTechCarCreatedEvent.fireAsync(new CarCreated(car.getId()));
+		this.newTechCarCreatedEvent.fire(new CarCreated(car.getId()));
 	} else {
-		this.carCreatedEvent.fireAsync(new CarCreated(car.getId()));
+		this.carCreatedEvent.fire(new CarCreated(car.getId()));
 	}
 	
 	this.mes.execute(() -> this.carProcessing.process(car));
@@ -116,12 +116,12 @@ import javax.enterprise.event.ObservesAsync;
 import com.nilesh.jawarkar.learn.javaee8.entity.CarCreated;
 
 public class CarCreationListener {
-	public void onCarCreation(@ObservesAsync final CarCreated event) {
+	public void onCarCreation(@Observes final CarCreated event) {
 		LockSupport.parkNanos(2000000000L);
 		System.out.println("Car created - " + event.getIdentifier());
 	}
 	
-	public void onNewTechCarCreation(@ObservesAsync @NewTech final CarCreated event) 
+	public void onNewTechCarCreation(@Observes @NewTech final CarCreated event) 
 	{
 		LockSupport.parkNanos(2000000000L);
 		System.out.println("New Tech Car created - " + event.getIdentifier());
@@ -129,3 +129,5 @@ public class CarCreationListener {
 }
 
 ```
+
+### Conditional events (TODO) ...
