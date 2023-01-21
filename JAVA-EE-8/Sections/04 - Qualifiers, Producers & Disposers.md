@@ -1,5 +1,21 @@
-1) Named - Provided by JAVAEE. Not type safe.
-- Producer
+**Qualifiers** - You can use qualifiers to provide various implementations of a particular bean type. A qualifier is an annotation that you apply to a bean. 
+A qualifier type is a Java annotation defined with following annotations
+- @Qualifier
+- @Target({METHOD, FIELD, PARAMETER, TYPE}) 
+- @Retention(RUNTIME).
+
+**Producer** - They're also the easiest way to integrate objects which are not beans into the CDI environment. 
+- According to the specs , a producer method acts as a source of objects to be injected, where:
+> -   the objects to be injected are not required to be instances of beans,
+> -   the concrete type of the objects to be injected may vary at runtime or
+> -   the objects require some custom initialisation that is not performed by the bean constructor
+- @Produces - Annotation can used to decorate the method, filed to mark them as producer.
+**Disposers** - Disposers are used rarely but good to know feature. It will come handy when you want to do custom cleanup on some type. Disposer will be called by the container before destroying target type.
+- @Disposes - Parameter of the cleanup method need to be decorated with @Disposes annotation.
+- Disposer need to be used with producer.
+
+### Producer using qualifier @Named (Provided by JAVAEE. Not type safe)
+- Define producer
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
@@ -16,11 +32,16 @@ public class DefaultColorProducer {
 	public Color setDefaultColor() {
 		return Color.RED;
 	}
+	
+	public void cleanUp(@Disposes Color color) {
+		// -- Some custome clean up
+		color = null;
+	}
 }
 
 ```
 
-- Consumer
+- Use producer
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
@@ -50,8 +71,8 @@ public class CarFactory {
 ```
 
 
-2) Custom - Created by user. Example - Diesel.
-- Qualifier
+### Producer using custom qualifier 
+- Define custom qualifier
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.entity;
 
@@ -68,27 +89,34 @@ public @interface Diesel {
 }
 
 ```
-- Producer
+
+- Define producer
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
+import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
-import javax.inject.Named;
-
 import com.nilesh.jawarkar.learn.javaee8.entity.Color;
 import com.nilesh.jawarkar.learn.javaee8.entity.Diesel;
 
 public class DefaultColorProducer {
-	
+
+	// -- @Named("Red")
 	@Diesel
 	@Produces
 	public Color setDefaultColor() {
 		return Color.RED;
 	}
+
+	public void cleanUp(@Disposes Color color) {
+		// -- Some custome clean up
+		color = null;
+	}
 }
 
 ```
-- Consumer
+
+- Use custom producer
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
@@ -114,3 +142,5 @@ public class CarFactory {
 		return car;
 	}
 }
+```
+

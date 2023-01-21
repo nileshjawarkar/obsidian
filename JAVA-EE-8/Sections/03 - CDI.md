@@ -17,10 +17,17 @@ bean-discovery-mode="all">
 </beans>
 ```
 
-### _@Inject_ 
+### Injection
 
 The _@Inject_ annotation is CDI's actual workhorse. It allows us to define injection points in the client classes.
 
-### _@Default_ and _@Alternative_ 
+### Managing ambiguity
 
 When more than one implementations are available for a type and CDI didn't know which implementation to inject. This is  a ambiguous situation. Solving this ambiguity is easy. CDI, by default, annotates all the implementations of an interface with the _@Default_ annotation. So, we should explicitly tell it which implementation should be injected into the client class my annotating one which you want to be injected by default with _@Default_ and others by annotating with _@Alternative_.
+
+### Life cycle callbacks
+
+- *@PostConstruct* - Method marked with this annotation is called after instance creation
+- *@PreDestroy* - Method marked with this annotation is called before destroying the instance
+
+
