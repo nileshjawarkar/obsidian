@@ -193,6 +193,12 @@ public class CarManufacturer {
 	CarFactory        carFactory;
 	CarRepository carRepository;
 
+	public CarManufacturer(CarFactory carFactory, 
+		CarRepository carRepository) {
+		this.carFactory = carFactory;
+		this.carRepository = carRepository;
+	}
+
 	public Car createCar(final Specification spec) {
 		if (spec.getEngineType() == EngineType.UNKNOWN)
 			throw new InvalidEngine();
@@ -218,8 +224,6 @@ public class CarManufacturer {
 			return null;
 		return retrieveCars();
 	}
-
 }
-
 ```
 
