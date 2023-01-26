@@ -34,7 +34,7 @@ persistence.xml - Basic configuration required to use HSQLDB
 **Note** - After setting "exclude-unlisted-classes"  to "false", actually there is no need to list entity classes in persistence.xml, but some how it is not working for tomee, that's why we can see entity classes in the xml.
 
 
-## JPA entity
+## _JPA entity_
 
 Entity is an application-defined object and it must have following properties :
 	 **Persistability** - It is stored in the database and can be accessed anytime
@@ -178,4 +178,61 @@ public class Car extends BaseEntity {
 
 Annotation @AttributeOverride can be used to override attribute names. In example shown above, we overridden id by carId. When data stored in DB, it will be stored in carId column.
 
+## _Mapping_
+
+### Mapping types
+
+JPA out off the box support following java types and will be automatically mapped to corresponding DB type :
+- primitive types such as int, long etc. 
+- java.lang.String, Serialisable type including wrappers of simple java types
+- Enum types
+- java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.util.Calender, java.sql.Date, java.sql.Time, java.sql.Timestamp
+- byte[], Byte[], char[], Character[]
+- java.time.LocalDate, java.time.LocalTime, java.time.LocalDateTime, java.time.OffsetTime, java.time.OffsetDateTime
+
+### Mapping enum type
+
+By default, Constant's in enum type are assigned a ordinal value. 
+Consider example of Color enum. Each color constant in Color enum will have ordinal starting from 0. Initially we have following color's. May be latter, we decided added some more color's  and added them at start or somewhere in middle. 
+
+This will result in change in ordinal values for each constant. If added BLACK before RED, ordinal value for BLACK will be 0 and ordinal value for RED will change to 1. This will lead to inconsistency, if we already have values in database.
+
+``` java
+package com.nilesh.jawarkar.learn.javaee8.entity;
+
+public enum Color {
+	RED,    //-> 0
+	WHITE,  //-> 1
+	BLUE,   //-> 2
+	ANY     //-> 3
+}
+```
+
+To avoid this _@Enumerated(EnumType.STRING)_ annotation can be used to store the values in DB as string not as ordinals.
+
+### Mapping large object (Eg. image)
+
+Database can store large objects such images, files etc. _@Lob_ annotation can be used to map those fields, intended to hold large objects. _@Lob_ signifies that the annotated field should be represented as BLOB (binary data) in the DB. JPA supports this annotation on many type, such as String[], char[], byte[], Byte[].
+
+Example - Car having picture.
+``` java
+package com.nilesh.jawarkar.learn.javaee8.entity;
+
+...
+import javax.persistence.Lob;
+...
+
+@Entity
+@Table(name = "cars")
+public class Car extends BaseEntity {
+	...
+	@Lob
+	private byte[] picture;
+	...
+}
+
+```
+
+
+## _Access types_
 
