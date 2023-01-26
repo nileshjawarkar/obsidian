@@ -34,7 +34,7 @@ persistence.xml - Basic configuration required to use HSQLDB
 **Note** - After setting "exclude-unlisted-classes"  to "false", actually there is no need to list entity classes in persistence.xml, but some how it is not working for tomee, that's why we can see entity classes in the xml.
 
 
-## _JPA entity_
+## JPA entity
 
 Entity is an application-defined object and it must have following properties :
 	 **Persistability** - It is stored in the database and can be accessed anytime
@@ -178,7 +178,7 @@ public class Car extends BaseEntity {
 
 Annotation @AttributeOverride can be used to override attribute names. In example shown above, we overridden id by carId. When data stored in DB, it will be stored in carId column.
 
-## _Mapping_
+## Mappings
 
 ### Mapping types
 
@@ -214,7 +214,7 @@ To avoid this _@Enumerated(EnumType.STRING)_ annotation can be used to store the
 
 Database can store large objects such images, files etc. _@Lob_ annotation can be used to map those fields, intended to hold large objects. _@Lob_ signifies that the annotated field should be represented as BLOB (binary data) in the DB. JPA supports this annotation on many type, such as String[], char[], byte[], Byte[].
 
-Example - Car having picture.
+Example - Car having  a picture.
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.entity;
 
@@ -233,6 +233,48 @@ public class Car extends BaseEntity {
 
 ```
 
+### Transient
 
-## _Access types_
+While persisting the object to the DB, we sometimes want to ignore certain fields. JPA annotation _@Transient_ can be added to such fields to ignore them.
 
+## Access types
+
+In JPA, mapping information of an entity must be accessible to the ORM provider at runtime, so that when it is writing the data to storage, mapping information can be obtained from the entity instance. Similarly, when the entity state is loaded from the storage, the provider runtime must be able to map the data into a new entity instance.
+
+There are generally two ways to provide this information to ORM providers i.e. `@Access(AccessType.FIELD)` and `@Access(AccessType.PROPERTY)`. But we can use mixed mode as well in some cases.
+
+### Field Access
+
+- To declare field access mode, explicitly annotate the entity with `"@Access(AccessType.FIELD)`“.
+- Class fields are used to map the state
+- When we use @Id annotation on class field, JPA infer it as a field access mode.
+- Please note that getter and setter methods are ignored by the provider.
+- All fields must be declared as either _protected_, _package_, or _private_. Public fields are disallowed
+
+### Property Access
+
+- To declare property access mode, explicitly annotate the entity with `"@Access(AccessType.PROPERTY)`“.
+-  When property access mode is used, there must be getter and setter methods for the persistent properties.
+- The type of property is determined by the return type of the getter method and must be the same as the type of the single parameter passed into the setter method.
+- Both methods must be either public or protected visibility. 
+- The mapping annotations for a property must be on the getter method.
+
+### Mixed Access
+
+- Though you will not require to use mix modes in most of the scenarios, it is possible and useful in some cases. For example, when an entity subclass is added to an existing hierarchy that uses a different access type.
+- Adding an `@Access` annotation with a specified access mode on the subclass entity (or even field) will cause the default access type to be overridden for that entity subclass.
+
+Example -
+``` java
+package com.nilesh.jawarkar.learn.javaee8.entity;
+
+import javax.persistence.Access;
+
+@Entity
+@Table(name = "cars")
+@Access(AccessType.FIELD) //-- To explicitly define the access
+public class Car extends BaseEntity {
+	...
+}
+
+```
