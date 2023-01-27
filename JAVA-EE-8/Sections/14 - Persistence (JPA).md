@@ -7,7 +7,7 @@
 - Object Relational Mapping (ORM) is a functionality which is used to develop and maintain a relationship between an object and relational database by mapping an object state to database column. 
 - It is capable to handle various database operations easily such as inserting, updating, deleting etc.
 
-### Configuring the DB
+## Configuring the DB
 TomEE server (_may be other severs also_) by default comes with HSQLDB. In this section, we will make use of that it. Java EE server uses "persistence.xml" file for DB configuration.
 
 persistence.xml - Basic configuration required to use HSQLDB
@@ -63,8 +63,10 @@ public class Car {
 	@Id
 	private String             id;
 
+	@Column(name = "engine")
 	@Enumerated(EnumType.STRING)
 	private EngineType         engineType;
+	
 	@Enumerated(EnumType.STRING)
 	private Color              color;
 
@@ -102,11 +104,13 @@ public class Car {
 }
 ```
 
-### Customising table mapping
+- ### Customising table & column name
+Optionally, 
+- we can provide custom table name to be used for entity using _@Table_ annotation. By default it will be entities name (class name).
+- we can provide custom column name  for field using _@Column_ annotation. Other than name, this annotation supports following attributes - unique, length, nullable, updatable etc.
 
-Optionally, we can define table name to be used for entity using @Table annotation. By default it will be entities name (class name).
 
-### Using super class
+- ### Using super class
 
 If all the entities has some common properties (such as id), we can create super class with these common properties. Lets define a super class for out Car class and modify Car class to use it as a super class :
 
@@ -146,8 +150,10 @@ import javax.persistence.Table;
 @Table(name = "cars")
 @AttributeOverride(name = "id", column = @Column(name = "carId"))
 public class Car extends BaseEntity {
+	@Column(name = "engine")
 	@Enumerated(EnumType.STRING)
 	private EngineType engineType;
+	
 	@Enumerated(EnumType.STRING)
 	private Color      color;
 
@@ -174,13 +180,13 @@ public class Car extends BaseEntity {
 
 ```
 
-### Overriding super class properties
+- ### Overriding super class properties
 
 Annotation @AttributeOverride can be used to override attribute names. In example shown above, we overridden id by carId. When data stored in DB, it will be stored in carId column.
 
 ## Mappings
 
-### Mapping types
+- ### Mapping types
 
 JPA out off the box support following java types and will be automatically mapped to corresponding DB type :
 - primitive types such as int, long etc. 
@@ -190,7 +196,7 @@ JPA out off the box support following java types and will be automatically mappe
 - byte[], Byte[], char[], Character[]
 - java.time.LocalDate, java.time.LocalTime, java.time.LocalDateTime, java.time.OffsetTime, java.time.OffsetDateTime
 
-### Mapping enum type
+- ### Mapping enum type
 
 By default, Constant's in enum type are assigned a ordinal value. 
 Consider example of Color enum. Each color constant in Color enum will have ordinal starting from 0. Initially we have following color's. May be latter, we decided added some more color's  and added them at start or somewhere in middle. 
@@ -210,7 +216,7 @@ public enum Color {
 
 To avoid this _@Enumerated(EnumType.STRING)_ annotation can be used to store the values in DB as string not as ordinals.
 
-### Mapping large object (Eg. image)
+- ### Mapping large object (Eg. image)
 
 Database can store large objects such images, files etc. _@Lob_ annotation can be used to map those fields, intended to hold large objects. _@Lob_ signifies that the annotated field should be represented as BLOB (binary data) in the DB. JPA supports this annotation on many type, such as String[], char[], byte[], Byte[].
 
@@ -233,7 +239,7 @@ public class Car extends BaseEntity {
 
 ```
 
-### Transient
+- ### Transient
 
 While persisting the object to the DB, we sometimes want to ignore certain fields. JPA annotation _@Transient_ can be added to such fields to ignore them.
 
@@ -243,26 +249,26 @@ In JPA, mapping information of an entity must be accessible to the ORM provider
 
 There are generally two ways to provide this information to ORM providers i.e. `@Access(AccessType.FIELD)` and `@Access(AccessType.PROPERTY)`. But we can use mixed mode as well in some cases.
 
-### Field Access
+- ### Field Access
 
-- To declare field access mode, explicitly annotate the entity with `"@Access(AccessType.FIELD)`“.
-- Class fields are used to map the state
-- When we use @Id annotation on class field, JPA infer it as a field access mode.
-- Please note that getter and setter methods are ignored by the provider.
-- All fields must be declared as either _protected_, _package_, or _private_. Public fields are disallowed
+1) To declare field access mode, explicitly annotate the entity with `"@Access(AccessType.FIELD)`“.
+2) Class fields are used to map the state
+3) When we use @Id annotation on class field, JPA infer it as a field access mode.
+4) Please note that getter and setter methods are ignored by the provider.
+5) All fields must be declared as either _protected_, _package_, or _private_. Public fields are disallowed
 
-### Property Access
+- ### Property Access
 
-- To declare property access mode, explicitly annotate the entity with `"@Access(AccessType.PROPERTY)`“.
--  When property access mode is used, there must be getter and setter methods for the persistent properties.
-- The type of property is determined by the return type of the getter method and must be the same as the type of the single parameter passed into the setter method.
-- Both methods must be either public or protected visibility. 
-- The mapping annotations for a property must be on the getter method.
+1) To declare property access mode, explicitly annotate the entity with `"@Access(AccessType.PROPERTY)`“.
+2)  When property access mode is used, there must be getter and setter methods for the persistent properties.
+3) The type of property is determined by the return type of the getter method and must be the same as the type of the single parameter passed into the setter method.
+4) Both methods must be either public or protected visibility. 
+5) The mapping annotations for a property must be on the getter method.
 
-### Mixed Access
+- ### Mixed Access
 
-- Though you will not require to use mix modes in most of the scenarios, it is possible and useful in some cases. For example, when an entity subclass is added to an existing hierarchy that uses a different access type.
-- Adding an `@Access` annotation with a specified access mode on the subclass entity (or even field) will cause the default access type to be overridden for that entity subclass.
+1) Though you will not require to use mix modes in most of the scenarios, it is possible and useful in some cases. For example, when an entity subclass is added to an existing hierarchy that uses a different access type.
+2) Adding an `@Access` annotation with a specified access mode on the subclass entity (or even field) will cause the default access type to be overridden for that entity subclass.
 
 Example -
 ``` java
@@ -278,3 +284,26 @@ public class Car extends BaseEntity {
 }
 
 ```
+
+
+## Relationship
+
+- ### Directionality
+
+1) The direction of a relationship can be either bidirectional or unidirectional
+2) A bidirectional relationship has both an owning side and an inverse side.
+3) A unidirectional relationship has only an owning side.
+4) The owning side of a relationship determines how the Persistence runtime makes updates to the relationship in the database.
+
+- ### Cardinality & Ordinality
+
+1) Cardinality specifies how many instances of an entity relate to one instance of another entity. 
+2) Ordinality is also closely linked to cardinality. While cardinality specifies the occurrences of a relationship, ordinality describes the relationship as either mandatory or optional
+3) In other words, cardinality specifies the maximum number of relationships and ordinality specifies the absolute minimum number of relationships.
+4) There are three main types of relationships in a database expressed using cardinality notation -
+	- one-to-one
+	- one-to-many
+	- many-to-many
+
+
+
