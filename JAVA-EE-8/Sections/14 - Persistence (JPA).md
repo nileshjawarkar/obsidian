@@ -106,8 +106,8 @@ public class Car {
 
 - ### Customising table & column name
 Optionally, 
-- we can provide custom table name to be used for entity using _@Table_ annotation. By default it will be entities name (class name).
-- we can provide custom column name  for field using _@Column_ annotation. Other than name, this annotation supports following attributes - unique, length, nullable, updatable etc.
+1) we can provide custom table name to be used for entity using _@Table_ annotation. By default it will be entities name (class name).
+2) we can provide custom column name  for field using _@Column_ annotation. Other than name, this annotation supports following attributes - unique, length, nullable, updatable etc.
 
 
 - ### Using super class
@@ -189,12 +189,12 @@ Annotation @AttributeOverride can be used to override attribute names. In exampl
 - ### Mapping types
 
 JPA out off the box support following java types and will be automatically mapped to corresponding DB type :
-- primitive types such as int, long etc. 
-- java.lang.String, Serialisable type including wrappers of simple java types
-- Enum types
-- java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.util.Calender, java.sql.Date, java.sql.Time, java.sql.Timestamp
-- byte[], Byte[], char[], Character[]
-- java.time.LocalDate, java.time.LocalTime, java.time.LocalDateTime, java.time.OffsetTime, java.time.OffsetDateTime
+1) primitive types such as int, long etc. 
+2) java.lang.String, Serialisable type including wrappers of simple java types
+3) Enum types
+4) java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.util.Calender, java.sql.Date, java.sql.Time, java.sql.Timestamp
+5) byte[], Byte[], char[], Character[]
+6) java.time.LocalDate, java.time.LocalTime, java.time.LocalDateTime, java.time.OffsetTime, java.time.OffsetDateTime
 
 - ### Mapping enum type
 
