@@ -301,9 +301,15 @@ public class Car extends BaseEntity {
 2) Ordinality is also closely linked to cardinality. While cardinality specifies the occurrences of a relationship, ordinality describes the relationship as either mandatory or optional
 3) In other words, cardinality specifies the maximum number of relationships and ordinality specifies the absolute minimum number of relationships.
 4) There are three main types of relationships in a database expressed using cardinality notation -
-	- one-to-one
-	- one-to-many
-	- many-to-many
+	- One-To-One
+	- One-To-Many & Many-To-One
+	- Many-To-Many
+5) JPA specifies to more relationship
+	- Embedded
+	- ElementCollection
+
+- ### One-To-One
+
 
 
 
