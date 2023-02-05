@@ -55,7 +55,7 @@ To represent the user add the following to the server-identities definition <sec
 
 - Add module 
 	`module add --name=org.apache.derby --resources=/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyclient.jar --dependencies=javax.api,javax.transaction.api`
-- Copy other required jars to module created
+- Copy other required jars to created module. This need to be done manually as current no idea on how to add multiple jars.
 - Modify module.xml manually to use copied jars.
 ``` xml
 <?xml version="1.0" ?>
@@ -114,4 +114,5 @@ To represent the user add the following to the server-identities definition <sec
 - [Video - add datasource - 1](https://www.youtube.com/watch?v=I8t1TLSeEBw)
 - [Video - add datasource - 2](https://www.youtube.com/watch?v=xSHXMcRsF0A)
 - [Add data source using CLI](http://www.mastertheboss.com/jbossas/jboss-datasource/how-to-configure-a-datasource-with-jboss-7/)
+- [JDBC url for multiple database](https://www.baeldung.com/java-jdbc-url-format)
 - 
