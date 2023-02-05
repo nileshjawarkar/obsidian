@@ -66,7 +66,6 @@ To represent the user add the following to the server-identities definition <sec
 <module xmlns="urn:jboss:module:1.1" name="org.apache.derby">
     <resources>
         <resource-root path="derbyclient.jar"/>
-        <resource-root path="derbyclient.jar"/>
         <resource-root path="derbyLocale_cs.jar"/>
         <resource-root path="derbyLocale_de_DE.jar"/>
         <resource-root path="derbyLocale_es.jar"/>
