@@ -1,7 +1,7 @@
 ### 1) Download and extract wildfly at suitable location
 - Consider this location as WILDFLY_HOME (its a full path)
 
-### 2) Add user
+### 2) Add user - This user will be used for web - admin console
 - `cd $WILDFLY_HOME/bin`
 - run `./add-user.sh`
 - add-user ask following questions
@@ -48,15 +48,19 @@ To represent the user add the following to the server-identities definition <sec
 - Add module 
 	`module add --name=com.mysql --resources=/home/nilesh/Downloads/Softwares/mysql-connector-java-8.0.28.jar --dependencies=javax.api,javax.transaction.api`
 
+- Register as JDBC driver
+	`/subsystem=datasources/jdbc-driver=mysql:add(driver-name="mysql",driver-module-name="com.mysql",driver-class-name=com.mysql.cj.jdbc.Driver)`
+
 - Add datasource
 	`data-source add --jndi-name=java:jboss/datasources/MysqlDS01 --name=MysqlPool --connection-url=jdbc:mysql://myhost1:3306,myhost2:3307/db_name --driver-name=mysql --user-name=test --password=test123`
 
 #### Derby
 
 - Add module 
-	`module add --name=org.apache.derby --resources=/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyclient.jar --dependencies=javax.api,javax.transaction.api`
-- Copy other required jars to created module. This need to be done manually as current no idea on how to add multiple jars.
-- Modify module.xml manually to use copied jars.
+	`module add --name=org.apache.derby2 --resource-delimiter=, --resources=/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyclient.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_cs.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_de_DE.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_es.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_fr.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_hu.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_it.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_ja_JP.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_ko_KR.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_pl.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_pt_BR.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_ru.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_zh_CN.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyLocale_zh_TW.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbyshared.jar,/home/nilesh/Downloads/Softwares/db-derby-10.16.1.1-bin/lib/derbytools.jar --dependencies=javax.api,javax.transaction.api`
+
+- To add multiple jar as a module resource, we need to define the resource delimiter using `--resource-delimiter=,` . Now use this delimiter to add multiple jars as shown in above command.
+- Above command will generate module with following module.xml
 ``` xml
 <?xml version="1.0" ?>
 <module xmlns="urn:jboss:module:1.1" name="org.apache.derby">
@@ -115,4 +119,5 @@ To represent the user add the following to the server-identities definition <sec
 - [Video - add datasource - 2](https://www.youtube.com/watch?v=xSHXMcRsF0A)
 - [Add data source using CLI](http://www.mastertheboss.com/jbossas/jboss-datasource/how-to-configure-a-datasource-with-jboss-7/)
 - [JDBC url for multiple database](https://www.baeldung.com/java-jdbc-url-format)
+- [Web side - master the boss](http://www.mastertheboss.com/)
 - 
