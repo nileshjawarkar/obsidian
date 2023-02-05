@@ -45,7 +45,7 @@ To represent the user add the following to the server-identities definition <sec
 
 #### MySQL
 
-- Add module 
+- Add module - This command will add modules under directory `${WILDFLY_HOME}/modules`
 	`module add --name=com.mysql --resources=/home/nilesh/Downloads/Softwares/mysql-connector-java-8.0.28.jar --dependencies=javax.api,javax.transaction.api`
 
 - Register as JDBC driver
