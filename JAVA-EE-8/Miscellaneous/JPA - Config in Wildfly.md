@@ -119,4 +119,3 @@ To represent the user add the following to the server-identities definition <sec
 - [Add data source using CLI](http://www.mastertheboss.com/jbossas/jboss-datasource/how-to-configure-a-datasource-with-jboss-7/)
 - [JDBC url for multiple database](https://www.baeldung.com/java-jdbc-url-format)
 - [Web side - master the boss](http://www.mastertheboss.com/)
-- 
