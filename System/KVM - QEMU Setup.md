@@ -135,7 +135,9 @@ $ virsh domifaddr ubuntu22042srv01
 ### 9) Clone image
 
 ``` sh
-$ virt-clone --original {Domain-Vm-Name-Here} \   --name {New-Domain-Vm-Name-Here} --file {/var/lib/libvirt/images/File.Name.here}
+$ virt-clone --original ubuntu22042srv01 \
+  --name ubuntu22042srv02 \
+  --file /home/nilesh/KVM/images/ubuntu22042srv02.img
 ```
 
 ### 10) Delete image
@@ -146,13 +148,42 @@ $ virsh shutdown ubuntu22042srv01
 $ virsh undefine ubuntu22042srv01
 ```
 
+### 11) Create new VM from existing image - NOT Working / IP Conflict
+``` sh
+virt-install --name ubuntu22042srv02 \
+--os-variant ubuntu22.04 \
+--ram 3072 \
+--disk /home/nilesh/KVM/images/ubuntu22042srv02.img,format=qcow2 \
+--graphics vnc,listen=0.0.0.0 \
+--noautoconsole \
+--hvm \
+--mac RANDOM \
+--import
+```
+
+
+### 12) Check network
+``` sh
+$ virsh net-list
+ Name      State    Autostart   Persistent
+--------------------------------------------
+ default   active   yes         yes
+
+$ virsh net-info default
+Name:           default
+UUID:           3c96bd1b-1ecb-43e6-b941-59d2fea5b2c4
+Active:         yes
+Persistent:     yes
+Autostart:      yes
+Bridge:         virbr0
+```
 
 ### Imp links
 - [redhat imp commads](https://www.redhat.com/sysadmin/virsh-subcommands)
 - [redhat - Networking](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/chap-virtualization_host_configuration_and_guest_installation_guide-network_configuration)
-- [Basic Install](https://adamtheautomator.com/virsh/)
+- [Basic Install](https://adamtheautomator.com/virsh/)1
 - [KVM Networking](https://computingforgeeks.com/managing-kvm-network-interfaces-in-linux/)
 - [Networking](https://apiraino.github.io/qemu-bridge-networking/)
 - [CheatSheet](https://computingforgeeks.com/virsh-commands-cheatsheet/)
 - [Setup](https://joshrosso.com/docs/2020/2020-05-06-linux-hypervisor-setup/)
-- 
+- [virt-install examples](https://kb.novaordis.com/index.php/Virt-install_Examples)
