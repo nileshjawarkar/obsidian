@@ -38,8 +38,13 @@ network:
   renderer: networkd
   ethernets:
     enp0s8:
-	  addresses: [192.168.56.6/24]
-	  dhcp4: false
+	  addresses:
+	    - 192.168.56.6/24
+	  nameservers:
+	    addresses: [192.168.56.1,8.8.8.8]
+	  routes:
+	    - to: default
+	      via: 192.168.56.1
 ```
 * Modify "/etc/hosts" file and assign new static ip against hostname
 * Run following command to test the changes

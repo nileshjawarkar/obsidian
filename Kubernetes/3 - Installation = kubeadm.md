@@ -1,7 +1,10 @@
 
 ## [Site](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 
-## Installation instruction for Redhat
+### Note - If creating cluster using VM's, please make sure all VM has static ip's
+
+
+## Instruction for Redhat
 
 ### Pre-reqs
 
