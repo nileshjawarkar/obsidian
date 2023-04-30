@@ -40,18 +40,7 @@ $ chmod 0660 /etc/qemu/bridge.conf
 ```
 
 
-### 2) Get IP address of VM - Can be used to connect using ssh.
-
-``` sh
-$ virsh domifaddr ubuntu22042srv01
- Name       MAC address          Protocol     Address
-------------------------------------------------------------------------------
- vnet1      52:54:00:9d:17:5f    ipv4         192.168.122.179/24
-
-```
-
-
-### 3) Check network
+### 2) Check network
 ``` sh
 $ virsh net-list
  Name      State    Autostart   Persistent
