@@ -1,13 +1,27 @@
-### 9) Delete image
+### 1) List all VM's
+``` sh
+virsh list --all
+```
+
+### 2) Start VM
+``` sh
+virsh start <VM NAME>
+```
+
+### 3) Stop VM
+``` sh
+virsh shutdown <VM NAME>
+```
+
+### 4) Delete image
 
 ``` sh
-$ virsh list --all
 $ virsh shutdown ubuntu22042srv01
 $ virsh undefine ubuntu22042srv01
 ```
 
 
-### 10) Clone image / Import image
+### 5) Clone image / Import image
 
 *1: Clone*
 ``` sh
