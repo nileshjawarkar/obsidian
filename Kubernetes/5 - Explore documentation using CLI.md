@@ -5,12 +5,9 @@ kubectl api-resources
 ```
 
 ### Get details of specific resource
-
-``` sh
-kubectl explain pod
-
-Output:
-
+1) `kubectl explain pod` - It will display details about the pod
+_Output_
+``` Text
 KIND:     Pod
 VERSION:  v1
 
@@ -45,3 +42,5 @@ FIELDS:
      https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
 
 ```
+
+2) `kubectl explain pod.spec` - It will display details about the pod.spec
