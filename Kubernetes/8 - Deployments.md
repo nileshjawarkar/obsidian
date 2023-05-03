@@ -64,6 +64,7 @@ We all know application keeps changing for various reasons, it may due to bugs, 
 
 In kubernetes case, application update will always lead to image update.
 Now for study purpose, lets consider in our deployment image changed from _stable_ to _latest_ .
+_1) Perform update_
 ``` yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -86,11 +87,16 @@ spec:
         - containerPort: 80        
 ```
 
-_1) Perform update_
 - `kubectl apply -f nginx-deployment.yaml`
 ``` Text
 deployment.apps/nginx-deployment configured
 ```
+
+OR update image directly
+
+- `kubectl set image deployment/nginx-deployment nginx=httpd:latest`
+- `nginx=<New Image:Version>` - What is nginx here? Its a name of the container used in deployment.
+- `--record` -  Above command can use  record option, to record the command used for the upgrade and will be display in the rollout history. But look like it is deprecated now. 
 
 _2) Check replicaset_
 - `kubectl get replicaset` - We can see 2 replicaset now. After some time older replicaset will have zero value for desire state, current and ready. It indicate rollout is complete.
@@ -162,7 +168,9 @@ _5) max surge and max unavailable_
 If for some reason, latest updated version is not working as expected and we need to revert back to older version. This is what rollback is, reverting back to older version.
 
 _1) Check rollout history_
-- `kubectl rollout history deployment.v1.apps/nginx-deployment`
+- `kubectl rollout history deployment.v1.apps/nginx-deployment` OR
+- `kubectl rollout history deployment/nginx-deployment` OR
+- `kubectl rollout history deployment nginx-deployment` 
 ``` Text
 deployment.apps/nginx-deployment 
 REVISION  CHANGE-CAUSE
