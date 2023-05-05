@@ -3,8 +3,6 @@ Service provides single IP address and domain (gateway) for multiple replicas of
 
 ![[Pasted image 20230504223729.png]]
 
-### Demo - Service concepts:
-
 Lets discuss some terminologies : 
 - Service  - Gateway that forward request to the endpoint
 - Endpoint - This is individual replica of the pod
@@ -216,7 +214,8 @@ spec:
 ```
 
 **2) Execute `kubectl apply -f <FILENAME>`  to add the endpoints**
-**3) Check the service -**
+
+**3) Check the service**
 ``` sh
 kubectl describe service nginx-service
 
