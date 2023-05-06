@@ -37,9 +37,9 @@ virsh net-dumpxml kubenet > kubenet.xml
   <domain name='kubenet'/>
   <ip address='192.168.200.1' netmask='255.255.255.0'>
     <dhcp>
-      <range start='192.168.200.5' end='192.168.200.10'/>
+      <range start='192.168.200.5' end='192.168.200.15'/>
       <host mac='52:54:00:9d:17:5f' ip='192.168.200.5'/>
-      <host mac='52:54:00:19:ef:b5' ip='192.168.200.7'/>
+      <host mac='52:54:00:19:ef:b5' ip='192.168.200.6'/>
     </dhcp>
   </ip>
 </network>

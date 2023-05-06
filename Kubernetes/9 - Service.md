@@ -318,7 +318,7 @@ service "nginx-service" deleted
 
 ### Type of Service 
 
-![[Pasted image 20230506150506.png]]
+![[Pasted image 20230506184952.png]]
 #### 1) ClusterIP 
 - This is the default type of service in Kubernetes. 
 - It creates a service which can be accessed by other applications in the kubernetes cluster, without allowing external access.
@@ -329,19 +329,19 @@ _Service example we seen is example of ClusterIP_
 - Inter service communication within the cluster. For example, communication between the front-end and back-end components of your app.
 
 #### 2) NodePort
--   NodePort service is an extension of ClusterIP service. A ClusterIP Service, to which the NodePort Service routes, is automatically created.
--   It exposes the service outside of the cluster by adding a cluster-wide port on top of ClusterIP.
--   NodePort exposes the service on each Node’s IP at a static port (the NodePort). Each node proxies that port into your Service. So, external traffic has access to fixed port on each Node. It means any request to your cluster on that port gets forwarded to the service.
--   You can contact the NodePort Service, from outside the cluster, by requesting \<NodeIP\>:\<NodePort\>.
+-   NodePort service is an extension of ClusterIP service. 
+- It exposes the service outside of the cluster by adding a cluster-wide static port on each node. Each node proxies that port into your Service.
+-   You can contact the NodePort Service, from outside the cluster, by requesting \<Node IP\>:\<Node Port\>
 -   Node port must be in the range of 30000–32767. Manually allocating a port to the service is optional. If it is undefined, Kubernetes will automatically assign one.
 -   If you are going to choose node port explicitly, ensure that the port was not already used by another service.
 
 **Use Cases**
 
 - When you want to enable external connectivity to your service.
--   Using a NodePort gives you the freedom to set up your own load balancing solution, to configure environments that are not fully supported by Kubernetes, or even to expose one or more nodes’ IPs directly.
--   Prefer to place a load balancer above your nodes to avoid node failure.
+-  Using a NodePort gives you the freedom to set up your own load balancing solution, to configure environments that are not fully supported by Kubernetes, or even to expose one or more nodes’ IP's directly.
+-  Prefer to place a load balancer above your nodes to avoid node failure.
 
+**1) Create service using yaml file - nginx-npservice.yaml**
 ``` yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -377,19 +377,79 @@ spec:
       targetPort: 80
 ```
 
+**2) Create service using CLI**
+
+- _Create deployment_
+``` sh
+kubectl create deployment nginx-deployment --image=nginx:latest --replicas=3 --port=80 --dry-run=client -o yaml
+
+# Output
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-deployment
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+```
+_If output is as expected, re-run the command without --dry-run and -o arguments._
+
+- _Create service_
+``` sh
+kubectl expose deployment nginx-deployment --name=nginx-npservice --port=8080 --target-port=80 --type=NodePort --dry-run=client -o yaml
+
+# Output
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-deployment
+  name: nginx-npservice
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx-deployment
+  type: NodePort
+status:
+  loadBalancer: {}
+```
+_If output is as expected, re-run the command without --dry-run and -o arguments._
+
 #### 3) LoadBalancer
 
 - LoadBalancer service is an extension of NodePort service. NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
--   It integrates NodePort with cloud-based load balancers.
--   It exposes the Service externally using a cloud provider’s load balancer.
--   Each cloud provider (AWS, Azure, GCP, etc) has its own native load balancer implementation. The cloud provider will create a load balancer, which then automatically routes requests to your Kubernetes Service.
--   Traffic from the external load balancer is directed at the backend Pods. The cloud provider decides how it is load balanced.
--   The actual creation of the load balancer happens asynchronously.
--   Every time you want to expose a service to the outside world, you have to create a new LoadBalancer and get an IP address.
+-   By default kubernetes didn't provide load balancer, it mostly depends on cloud providers (like AWS, GCP.. etc.) to provide there own implementation.
+- If load balance implementation not provided, this type of service behaves as NodePort service.
+- On local kubernetes installations, we need to install and configure LB. Generally  on private/local installations, metallb is used as the loadbalancer. Please check following [link](obsidian://open?vault=Study&file=Kubernetes%2F2%20-%20Installation%20%3D%20microk8s) to configure it.
 
 **Use cases**
 - When you are using a cloud provider to host your Kubernetes cluster.
 
+**1) Create service using yaml file - nginx-lbservice.yaml**
 ``` yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -424,3 +484,6 @@ spec:
       port: 8080
       targetPort: 80
 ```
+
+**2) Create service using CLI**
+- Follow same steps defined for NodePort. Just while creating service change _--type=LoadBalancer_.
