@@ -318,11 +318,109 @@ service "nginx-service" deleted
 
 ### Type of Service 
 
-1) ClusterIP 
-	- This is the default type of service in Kubernetes. 
-	- It creates a service which can be accessed by other applications in the kubernetes cluster, without allowing external access.
+![[Pasted image 20230506150506.png]]
+#### 1) ClusterIP 
+- This is the default type of service in Kubernetes. 
+- It creates a service which can be accessed by other applications in the kubernetes cluster, without allowing external access.
 
+_Service example we seen is example of ClusterIP_
 
-2) NodePort
+**Use Cases**
+- Inter service communication within the cluster. For example, communication between the front-end and back-end components of your app.
 
-3) LoadBalancer
+#### 2) NodePort
+-   NodePort service is an extension of ClusterIP service. A ClusterIP Service, to which the NodePort Service routes, is automatically created.
+-   It exposes the service outside of the cluster by adding a cluster-wide port on top of ClusterIP.
+-   NodePort exposes the service on each Node’s IP at a static port (the NodePort). Each node proxies that port into your Service. So, external traffic has access to fixed port on each Node. It means any request to your cluster on that port gets forwarded to the service.
+-   You can contact the NodePort Service, from outside the cluster, by requesting \<NodeIP\>:\<NodePort\>.
+-   Node port must be in the range of 30000–32767. Manually allocating a port to the service is optional. If it is undefined, Kubernetes will automatically assign one.
+-   If you are going to choose node port explicitly, ensure that the port was not already used by another service.
+
+**Use Cases**
+
+- When you want to enable external connectivity to your service.
+-   Using a NodePort gives you the freedom to set up your own load balancing solution, to configure environments that are not fully supported by Kubernetes, or even to expose one or more nodes’ IPs directly.
+-   Prefer to place a load balancer above your nodes to avoid node failure.
+
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-srv-pod
+  template:
+    metadata:
+      labels:
+        app: nginx-srv-pod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable
+        ports:
+        - containerPort: 80 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-npservice
+spec:
+  type: NodePort
+  selector:
+    app: nginx-srv-pod
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+```
+
+#### 3) LoadBalancer
+
+- LoadBalancer service is an extension of NodePort service. NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
+-   It integrates NodePort with cloud-based load balancers.
+-   It exposes the Service externally using a cloud provider’s load balancer.
+-   Each cloud provider (AWS, Azure, GCP, etc) has its own native load balancer implementation. The cloud provider will create a load balancer, which then automatically routes requests to your Kubernetes Service.
+-   Traffic from the external load balancer is directed at the backend Pods. The cloud provider decides how it is load balanced.
+-   The actual creation of the load balancer happens asynchronously.
+-   Every time you want to expose a service to the outside world, you have to create a new LoadBalancer and get an IP address.
+
+**Use cases**
+- When you are using a cloud provider to host your Kubernetes cluster.
+
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-srv-pod
+  template:
+    metadata:
+      labels:
+        app: nginx-srv-pod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable
+        ports:
+        - containerPort: 80 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-lbservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx-srv-pod
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+```
