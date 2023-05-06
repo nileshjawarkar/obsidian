@@ -444,7 +444,7 @@ _If output is as expected, re-run the command without --dry-run and -o arguments
 - LoadBalancer service is an extension of NodePort service. NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
 -   By default kubernetes didn't provide load balancer, it mostly depends on cloud providers (like AWS, GCP.. etc.) to provide there own implementation.
 - If load balance implementation not provided, this type of service behaves as NodePort service.
-- On local kubernetes installations, we need to install and configure LB. Generally  on private/local installations, metallb is used as the loadbalancer. Please check following [link](obsidian://open?vault=Study&file=Kubernetes%2F2%20-%20Installation%20%3D%20microk8s) to configure it.
+- On local kubernetes installations, we need to install and configure LB. Generally  on private/local installations, metallb is used as the loadbalancer. Please check section _Installation = microk8s_ to configure it.
 
 **Use cases**
 - When you are using a cloud provider to host your Kubernetes cluster.
@@ -486,4 +486,4 @@ spec:
 ```
 
 **2) Create service using CLI**
-- Follow same steps defined for NodePort. Just while creating service change _--type=LoadBalancer_.
+- Follow the same steps defined for NodePort., just while creating service change type to _--type=LoadBalancer_.
