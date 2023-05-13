@@ -56,7 +56,7 @@ virsh net-undefine kubenet
 ### 6) Create network using above XML
 
 ``` sh
-virsh net-create kubenet.xml
+virsh net-define kubenet.xml
 ```
 
 ### 7) Start new network
