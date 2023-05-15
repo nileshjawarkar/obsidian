@@ -114,6 +114,11 @@ kubectl create ingress demo-ingress --class=nginx  \
 --rule="demo.localdev.me/nginx=demo2-service:8080"
 ```
 
+- Note -  First endpoint defined with _/*_ and 2nd without _*_ :
+	1) demo.localdev.me/*=demo1-service:8080
+	2) demo.localdev.me/nginx=demo2-service:8080
+
+
 4) Check Ingress details
 ``` sh
 kubectl describe ingress demo-ingress
