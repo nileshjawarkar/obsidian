@@ -19,7 +19,7 @@ The four main options we'll be comparing here are: **ClusterIP**, **NodePort**, 
 
 kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8080:80
 ```
-- Please check Installation instruction for Ingress and Metallb load balancer at [[m2 - Adons Instalations]]
+- Please check Installation instruction for Ingress and Metallb load balancer at [[Adons Instalations]]
 
 - Check object created after install
 ``` sh
