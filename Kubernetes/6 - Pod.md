@@ -87,7 +87,30 @@ status: {}
 ```
 - Now we can use above output and modify it as per the requirements
 
-#### 4) Labels and selectors
+#### 4) Running a command right after container start - This will be very helpful for testing.
+
+``` yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx-pod
+  name: nginx-pod
+spec:
+  containers:
+  - image: nginx:latest
+    name: nginx-pod
+    ports:
+    - containerPort: 80
+    lifecycle:
+      postStart:
+        exec: 
+           command: ["/bin/sh", "-c", 'echo "<html><body>NGINX Server, HostName - ${HOSTNAME}</body></html>" > /usr/share/nginx/html/index.html']
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+```
+
+#### 5) Labels and selectors
 
 - Labels are nothing but key & value pair associated with kubernetes objects
 - And these labels can be used as selectors to filter pods.
