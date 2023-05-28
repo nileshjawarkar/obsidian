@@ -108,10 +108,10 @@ spec:
     - image: busybox:latest
       name: busybox-01
       command: ['sh', '-c', 'while true; do sleep 3600; done']
-	  env:
-	     - name: pwd-secret
-	       valueFrom:
-	          secretKeyRef:
-	             name: db-pwd-01
-	             key: pwd
+      env:
+        - name: pwd-secret
+          valueFrom:
+            secretKeyRef:
+              name: db-pwd-01
+              key: pwd
 ```
