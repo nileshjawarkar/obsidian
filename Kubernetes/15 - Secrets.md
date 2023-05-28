@@ -5,7 +5,7 @@ A Secret is an object that contains a small amount of sensitive data such as a p
 
 #### 1) Using literal -
 
-- Encode password "dbpassword123" value using Base64 encode
+- [NOT REQUIRED] Encode password "dbpassword123" value using Base64 encode
 ``` sh
 echo "dbpassword123" | base64
 
@@ -74,8 +74,9 @@ metadata:
 type: Opaque
 ```
 
-### Use secret in the pod
+### Use secret in pods
 
+#### 1) As a volume -
 ``` yaml
 apiVersion: v1 
 kind: Pod 
@@ -94,4 +95,23 @@ spec:
     - name: pwd-secret
       secret: 
         secretName: db-pwd-01
+```
+
+#### 2) As as a environment variable
+``` yaml
+apiVersion: v1 
+kind: Pod 
+metadata: 
+   name: pod-sc-use02
+spec: 
+  containers: 
+    - image: busybox:latest
+      name: busybox-01
+      command: ['sh', '-c', 'while true; do sleep 3600; done']
+	  env:
+	     - name: pwd-secret
+	       valueFrom:
+	          secretKeyRef:
+	             name: db-pwd-01
+	             key: pwd
 ```
