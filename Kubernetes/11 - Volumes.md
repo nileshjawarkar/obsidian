@@ -165,3 +165,101 @@ spec:
       sizeLimit: 100Mi
       medium: Memory
 ```
+
+
+### 3) OpenEBS - Mayastor
+
+On installing/enabling mayastor, it create 2 storage classes. So for using mayastor, we dont have to create _Persistent Volume_, we can directly create _Persistent Volume claim_.
+
+- Create PVC - Please note use of storage class
+``` yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+   name: mydata-pvc
+spec:
+   storageClassName: mayastor
+   accessModes:
+      - ReadWriteOnce
+   resources:
+      requests:
+         storage: 1Gi
+```
+
+- Create POD 
+``` yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-pod
+spec:    
+  containers:
+  - image: busybox:latest
+	name: busybox
+	command: ['sh', '-c', 'while true; do sleep 3600; done']
+	volumeMounts:
+	- mountPath: /usr/local/mydata
+	  name: mydata
+  volumes:
+	- name: mydata
+	  persistentVolumeClaim:
+		claimName: mydata-pvc
+```
+
+## Deployments and Persistent Volume Claim
+
+This is about the limitation of deployment. Deployment didnt provide us a way, where we can not create volume claim as per specified number of replicas and use it for the pod.
+
+### Lets discuss it using following example -
+
+- Save following snippet as _busybox-deployment.yaml_
+``` yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+   name: mydata-pvc
+spec:
+   storageClassName: mayastor
+   accessModes:
+      - ReadWriteOnce
+   resources:
+      requests:
+         storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: busybox-deployment
+  name: busybox-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: busybox-pod
+  template:
+    metadata:
+      labels:
+        app: busybox-pod
+    spec:
+      containers:
+      - image: busybox:latest
+        name: busybox
+        command: ['sh', '-c', 'while true; do sleep 3600; done']
+        volumeMounts:
+        - mountPath: /usr/local/mydata
+          name: mydata
+      volumes:
+        - name: mydata
+          persistentVolumeClaim:
+            claimName: mydata-pvc
+```
+
+- execute `kubectl apply -f busybox-deployment`
+
+- Point to note - 
+	1) We have created only one volume claim and we want to create 2 replicas of pod
+	2) Volume claim can be attached to one pod only, so out of 2 pod we asked to create, creation of one pod will fails with error _Unable to attach or mount volumes_. 
+	3) As we discuss above, deployment didn't provide any way to create multiple volume claim, which can be attached to the each pod created. In such requirements _StatefulSet_ should be used.
+- Now modify yaml and set replicas to 1 and re-apply the yaml. 
+
