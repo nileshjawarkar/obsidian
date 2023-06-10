@@ -54,8 +54,9 @@ metadata:
 ## 2) Ingress - Deployment mode (microk8s will install it in demon mode)
 
 ``` sh
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx 
-helm upgrade --install ingress-nginx ingress-nginx --namespace ingress-nginx --create-namespace
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace
 ```
 
 **Important links**
