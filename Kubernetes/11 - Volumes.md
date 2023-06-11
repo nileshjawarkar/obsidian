@@ -19,6 +19,37 @@ Kubernetes volumes provide solution for the following problems -
 
 This type of volume mounts a file or directory from the host node’s filesystem into your pod.
 
+- Create POD
+``` yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: busybox-pod
+  name: busybox-pod
+spec:
+  containers:
+  - image: busybox:latest
+    name: busybox-01
+    command: ['sh', '-c', 'while true; do sleep 3600; done']
+    volumeMounts:
+      - mountPath: /usr/local/test
+        name: mydir
+      - mountPath: /usr/local/test/testFile.txt
+        name: myfile
+  volumes:
+    - name: mydir
+      hostPath:
+        path: /usr/local/test
+        type: DirectoryOrCreate
+    - name: myfile
+      hostPath:
+        path: /usr/local/test/testFile.txt
+        type: FileOrCreate
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+```
+
 __Using PV and PVC__ - Use of PV and PVC is generic way of using volumes and applicable to almost all type of volumes.
 
 - Create PV 
@@ -72,39 +103,6 @@ spec:
     - name: mydata
       persistentVolumeClaim:
         claimName: host-path-pvc01
-```
-
-__Without using PV and PVC__ - (May be) This is specific to hostPath type volume
-
-- Create POD
-``` yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    run: busybox-pod
-  name: busybox-pod
-spec:
-  containers:
-  - image: busybox:latest
-    name: busybox-01
-    command: ['sh', '-c', 'while true; do sleep 3600; done']
-    volumeMounts:
-      - mountPath: /usr/local/test
-        name: mydir
-      - mountPath: /usr/local/test/testFile.txt
-        name: myfile
-  volumes:
-    - name: mydir
-      hostPath:
-        path: /usr/local/test
-        type: DirectoryOrCreate
-    - name: myfile
-      hostPath:
-        path: /usr/local/test/testFile.txt
-        type: FileOrCreate
-  dnsPolicy: ClusterFirst
-  restartPolicy: Always
 ```
 
 
