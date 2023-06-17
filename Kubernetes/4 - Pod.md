@@ -110,7 +110,35 @@ spec:
   restartPolicy: Always
 ```
 
-#### 5) Labels and selectors
+#### 5) Resource limitation
+``` yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx-pod
+  name: nginx-pod
+spec:
+  containers:
+  - image: nginx:latest
+    name: nginx-pod
+    ports:
+    - containerPort: 80
+    resources:
+	   limits:
+	      cpu: "200m"
+	      memory: "200Mi"
+	   requests:
+	      cpu: "100m"
+	      memory: "100Mi"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+```
+
+
+#### 6) Labels and selectors
 
 - Labels are nothing but key & value pair associated with kubernetes objects
 - And these labels can be used as selectors to filter pods.
