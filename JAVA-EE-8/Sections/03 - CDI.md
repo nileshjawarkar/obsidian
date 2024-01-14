@@ -17,9 +17,69 @@ bean-discovery-mode="all">
 </beans>
 ```
 
+*Note* - Save this bean.xml to "WEB-INF" directory of web-app.
 ### Injection
 
 The _@Inject_ annotation is CDI's actual workhorse. It allows us to define injection points in the client classes.
+
+We can modify "CarManufacturer" class to use CDI.
+
+``` java
+package com.nilesh.jawarkar.learn.javaee8.boundry;
+
+import java.util.List;
+import javax.inject.Inject;
+
+import com.nilesh.jawarkar.learn.javaee8.control.CarFactory;
+import com.nilesh.jawarkar.learn.javaee8.control.TrackColor;
+import com.nilesh.jawarkar.learn.javaee8.entity.Car;
+import com.nilesh.jawarkar.learn.javaee8.entity.CarCreated;
+import com.nilesh.jawarkar.learn.javaee8.entity.Color;
+import com.nilesh.jawarkar.learn.javaee8.entity.EngineType;
+import com.nilesh.jawarkar.learn.javaee8.entity.InvalidEngine;
+import com.nilesh.jawarkar.learn.javaee8.entity.Specification;
+
+public class CarManufacturer {
+
+    @Inject
+	CarFactory        carFactory;
+	@Inject
+	CarRepository carRepository;
+
+    /* Not required now -
+	public CarManufacturer(CarFactory carFactory, 
+		CarRepository carRepository) {
+		this.carFactory = carFactory;
+		this.carRepository = carRepository;
+	} */
+
+	public Car createCar(final Specification spec) {
+		if (spec.getEngineType() == EngineType.UNKNOWN)
+			throw new InvalidEngine();
+		final Car car = carFactory.createCar(spec);
+		carRepository.save(car);
+		carCreatedEvent.fire(new CarCreated(car.getId()));
+		return car;
+	}
+
+	public Car retrieveCar(final String id) {
+		return carRepository.findById(id);
+	}
+
+	public List<Car> retrieveCars() {
+		return carRepository.getAll(null, null);
+	}
+
+	public List<Car> retrieveCars(final String filterByAttr, 
+		final String filterByValue) {
+		if (filterByAttr == null 
+			|| filterByAttr.equals("") 
+			|| filterByValue == null)
+			return null;
+		return retrieveCars();
+	}
+}
+```
 
 ### Managing ambiguity
 

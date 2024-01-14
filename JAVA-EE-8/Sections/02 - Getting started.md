@@ -18,7 +18,11 @@
 	 6) CarManufacturer - Manage create, retrieval
 
 
-- ### Starting Implementation of above classes 
+- ### Example Implementation of above classes 
+
+	*Note* - Please create maven project as explained in [section](obsidian://open?vault=obsidian&file=JAVA-EE-8%2FMiscellaneous%2FSetting%20JAVA%20EE%20maven%20project%20in%20eclipse)
+	
+
 1) Color Enum
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.entity;

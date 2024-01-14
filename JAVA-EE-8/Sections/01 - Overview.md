@@ -16,7 +16,7 @@
 
 ### Goal
 
-- Being able to enterprise application with modern Java EE 8 features
+- Being able to create enterprise application with modern Java EE 8 features
 - Acquiring knowledge of Java EE components, such as :
 	1) CDI
 	2) EJB
