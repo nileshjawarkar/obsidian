@@ -178,16 +178,31 @@ public class CarRepository {
 }
 
 ```
-6) CarManufacturer class
+
+6) CarFactory class
+``` java
+package com.nilesh.jawarkar.learn.javaee8.control;
+
+import com.nilesh.jawarkar.learn.javaee8.entity.Car;
+import com.nilesh.jawarkar.learn.javaee8.entity.Specification;
+
+public class CarFactory {
+	public Car createCar(Specification spec) {
+		Car c = new Car();
+		c.setColor(spec.getColor());
+		c.setEngine(spec.getEngineType());
+		return c;
+	}
+}
+```
+
+7) CarManufacturer class
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.boundry;
 
 import java.util.List;
-
 import com.nilesh.jawarkar.learn.javaee8.control.CarFactory;
-import com.nilesh.jawarkar.learn.javaee8.control.TrackColor;
 import com.nilesh.jawarkar.learn.javaee8.entity.Car;
-import com.nilesh.jawarkar.learn.javaee8.entity.CarCreated;
 import com.nilesh.jawarkar.learn.javaee8.entity.Color;
 import com.nilesh.jawarkar.learn.javaee8.entity.EngineType;
 import com.nilesh.jawarkar.learn.javaee8.entity.InvalidEngine;
@@ -208,7 +223,6 @@ public class CarManufacturer {
 			throw new InvalidEngine();
 		final Car car = carFactory.createCar(spec);
 		carRepository.save(car);
-		carCreatedEvent.fire(new CarCreated(car.getId()));
 		return car;
 	}
 
