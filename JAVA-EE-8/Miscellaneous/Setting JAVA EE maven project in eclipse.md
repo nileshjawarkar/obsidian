@@ -1,6 +1,7 @@
 
 1) Create project without using any artifact
 2) Modify POM.xml
+	- Change packaging to war
 	- Add following text to configure java 17 and war plugin.
 
 ``` xml
@@ -13,9 +14,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<artifactId>ARTIFACTID</artifactId>
 	<version>0.0.1</version>
 	<name>PROJECT_NAME</name>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<properties>
-		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
 	<dependencies>
 	</dependencies>
@@ -24,7 +24,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.12.1</version>
 				<configuration>
 					<source>17</source>
 					<target>17</target>
@@ -41,8 +41,28 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>3.3.2</version>`
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.1.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.3.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>3.0.1</version>
+			</plugin>			
 		</plugins>
 	</build>
 </project>
