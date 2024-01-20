@@ -1,23 +1,23 @@
-This is one of the most powerful feature of JavaEE.  It helps to develop decoupled application as component can send data to another component without any form of relation between them.
+This is one of the most powerful feature of JavaEE.  It helps to develop decoupled application, as component can send data to another component without any form of relation between them.
 
-- Even description class (payload)
+Consider we want to do something after car creation. We can implement this using events. Lets see how to do it -
+
+- Create event description class - 
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.entity;
 
 public class CarCreated {
 	private final String identifier;
-	
 	public CarCreated(String identifier) {
 		this.identifier = identifier;
 	}
-	
 	public String getIdentifier() {
 		return identifier;
 	}
 }
 ```
 
-- Producer "CarManufacturer" - "createCar" method will fire the event.
+- Fire the car created event -
 ``` java
 @Stateless
 public class CarManufacturer {
@@ -34,14 +34,13 @@ public class CarManufacturer {
 		
 		final Car car = carFactory.createCar(spec);
 		carRepository.save(car);
-		
 		carCreatedEvent.fire(new CarCreated(car.getId()));
 		return car;
 	}
 }
 ```
 
-- Listener - This class will handle the fired event.
+- Handle the fired event - 
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
@@ -49,11 +48,13 @@ import javax.enterprise.event.Observes;
 import com.nilesh.jawarkar.learn.javaee8.entity.CarCreated;
 
 public class CarCreationListener {
+	static Logger LOGGER = 
+		Logger.getLogger(CarCreationListener.class.getName());
 	public void onCarCreation(@Observes CarCreated event) {
-		System.out.println("Car created - " + event.getIdentifier());
+		LOGGER.info("Car created with id - \'" 
+			+ carCreatedEvent.getIdentifier() + "\'");
 	}
 }
-
 ```
 
 
