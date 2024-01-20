@@ -114,7 +114,22 @@ public class Car {
 }
 
 ```
-5) CarRepository class
+
+5) CarRepository interface
+``` java
+package com.nilesh.jawarkar.javaee8.control;
+
+import java.util.List;
+import com.nilesh.jawarkar.learn.javaee8.entity.Car;
+
+public interface CarRepository {
+	public Car findById(final String id) ;
+	public List<Car> getAll(final String filterByAttr, final String filterByValue) ;
+	public void save(final Car car);
+}
+```
+
+6) CarRepositoryInMemImpl class
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
@@ -127,13 +142,13 @@ import com.nilesh.jawarkar.learn.javaee8.entity.Car;
 import com.nilesh.jawarkar.learn.javaee8.entity.Color;
 import com.nilesh.jawarkar.learn.javaee8.entity.EngineType;
 
-public class CarRepository {
+public class CarRepositoryInMemImpl implements CarRepository {
 
 	private List<Car> list = new ArrayList<>();
 
 	public CarRepository() {
 		final Car c1 = new Car();
-		c1.setId(UUID.randomUUID().toString());
+		c1.setId("3794bab4-a59f-47a6-a4fb-da597d46f782");
 		c1.setColor(Color.BLUE);
 		c1.setEngine(EngineType.DIESEL);
 		list.add(c1);
@@ -145,6 +160,7 @@ public class CarRepository {
 		list.add(c2);
 	}
 
+    @Override
 	public Car findById(final String id) {
 		for (final Car c : list) {
 			final String cid = c.getId();
@@ -154,6 +170,7 @@ public class CarRepository {
 		return null;
 	}
 
+    @Override
 	public List<Car> getAll(final String filterByAttr, 
 		final String filterByValue) {
 		if (filterByAttr == null 
@@ -171,6 +188,7 @@ public class CarRepository {
 		}).collect(Collectors.toList());
 	}
 
+    @Override
 	public void save(final Car car) {
 		list.add(car);
 	}
@@ -179,7 +197,7 @@ public class CarRepository {
 
 ```
 
-6) CarFactory class
+7) CarFactory class
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.control;
 
@@ -196,7 +214,16 @@ public class CarFactory {
 }
 ```
 
-7) CarManufacturer class
+8) InvalidEngine class
+``` java
+package com.nilesh.jawarkar.learn.javaee8.boundry;
+
+public class InvalidEngine extends Exception {
+	private static final long serialVersionUID = 1L;
+}
+```
+
+9) CarManufacturer class
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.boundry;
 
@@ -236,11 +263,7 @@ public class CarManufacturer {
 
 	public List<Car> retrieveCars(final String filterByAttr, 
 		final String filterByValue) {
-		if (filterByAttr == null 
-			|| filterByAttr.equals("") 
-			|| filterByValue == null)
-			return null;
-		return retrieveCars();
+		return carRepository.getAll(filterByAttr, filterByValue);
 	}
 }
 ```

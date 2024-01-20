@@ -1,8 +1,9 @@
 
-1) Create project without using any artifact
+1) Create project with name "carman" without using any artifact
 2) Modify POM.xml
-	- Change packaging to war
-	- Add following text to configure java 17 and war plugin.
+	- Add following text to configure java 17 and other plugins.
+	-  Change packaging to war
+	- Change project_name to "carman"
 
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -79,17 +80,19 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 ```
 
 
-4) By default Eclipse/Maven will create following directory structure
+4) After changing packaging type to "war", maven will create following directory structure -
 ```
 ProjectRoot
 	|
 	+-- src
 		|
 		+-- main
-			|
-			+-- java
-			|
-			+-- resources
+		|	|
+		|	+-- java
+		|	|
+		|	+-- resources
+		|   |
+		|   +-- webapp
 		|
 		+-- test
 			|
@@ -99,7 +102,7 @@ ProjectRoot
 
 ```
 
-5) Add webapp directory under src/main. Under webapp directory create WEB-INF directory. Add META-INF directory under "src/main/resources". 
+5) Under webapp directory create WEB-INF directory. Under resources directory create META-INF directory. 
 ```
 ProjectRoot
 	|
@@ -110,10 +113,10 @@ ProjectRoot
 			+-- java
 			|
 			+-- resources
-				|
-				+-- META-INF
-					|
-					+-- persistence.xml			
+			|	|
+			|	+-- META-INF
+			|		|
+			|		+-- persistence.xml			
 			|
 			+-- webapp
 				|
@@ -137,26 +140,7 @@ bean-discovery-mode="all">
 </beans>
 ```
 
-7) Add following content to the persistence.xml. Note persistence.xml must be added to "src/main/resources/META-INF" directory, otherwise we can face wired error like "Can't find a persistence unit named null in deployment".
-``` xml
-<?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2"
-xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-<persistence-unit name="prod" transaction-type="JTA">
-<!-- <exclude-unlisted-classes>false</exclude-unlisted-classes> -->
-<class>com.nilesh.jawarkar.learn.javaee8.entity.Car</class>
-<properties>
-<property
-name="javax.persistence.schema-generation.database.action"
-value="drop-and-create" />
-</properties>
-</persistence-unit>
-</persistence>
-``` 
-
-8) Added following content to web.xml. Even if we do not add web.xml, in most cases it will work. But for sake of completeness, I am adding it. 
+7) Added following content to web.xml. Even if we do not add web.xml, in most cases it will work. But for sake of completeness, I am adding it. 
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web
@@ -166,12 +150,34 @@ Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>
 </web-app>
 ```
 
-9) Optional - When web.xml is not added please set following property in pom.xml
+8) Optional - When web.xml is not added please set following property in pom.xml
 ``` xml
 <properties>
 	<failOnMissingWebXml>false</failOnMissingWebXml>
 </properties>
 ```
+
+9) Optional - 
+- Only needed for configuring persistence. We will discuss this topic in separate section.
+- Add following content to the persistence.xml. Note persistence.xml must be added to "src/main/resources/META-INF" directory, otherwise we can face wired error like "Can't find a persistence unit named null in deployment". 
+
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2"
+xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+<persistence-unit name="prod" transaction-type="JTA">
+	<!-- <exclude-unlisted-classes>false</exclude-unlisted-classes> -->
+	<!-- <class>com.nilesh.jawarkar.learn.javaee8.entity.Car</class> -->
+	<properties>
+		<property
+		name="javax.persistence.schema-generation.database.action"
+		value="drop-and-create" />
+	</properties>
+</persistence-unit>
+</persistence>
+``` 
 #### Now Java EE project is ready to work on. Happy learning.
 
 
