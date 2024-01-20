@@ -110,7 +110,10 @@ Server: Apache TomEE
 
 ### JSON-P, Path Param, Query Param, UriInfo
 
-**JSON-P** : It is used to manage json processing manually.  In following example, input is accepted json objects and we explicitly reading specific properties from json objects. In similar way, we are creating output as a json objects and packaging them in Response  with relevant status. This is very important, when we work with very complex data.
+**JSON-P** : It is used to manage json processing manually.  
+- In following example, input is accepted as json objects. We are explicitly reading specific properties from json objects. 
+- In similar way, we are creating output as a json objects and packaging them in Response  with relevant status. 
+- This is very important, when we are working with very complex data and we want to control input/output as per the requirements.
 
 ``` java
 package com.nnj.learn.javaee8.boundry.resource;
@@ -255,16 +258,12 @@ Server: Apache TomEE
 
 **UriInfo** : An instance of `UriInfo` can be injected as field or method parameter using the @Context annotation. UriInfo provides access to application and request URI information.
 
+In above example, url is created as shown & explained below.
 ``` java
-final URI uri = uriInfo.getBaseUriBuilder()
-	.path(CarResourceV2.class)
-	.path(CarResourceV2.class, "getCar")
-	.build(car.getId());
+final URI uri = uriInfo.getBaseUriBuilder() //-- Add base path
+	.path(CarResourceV2.class)              //-- Add "/v2/cars"
+	.path(CarResourceV2.class, "getCar")    //-- Add "/{id}"
+	.build(car.getId());                    //-- Replace id with real value
 ```
 
-In above example, we are build path as follows -
-- http://localhost:8080/carman/api/v2/cars/3794bab4-a59f-47a6-a4fb-da597d46f782
-	- http://localhost:8080/carman/api  <- uriInfo.getBaseUriBuilder()
-	- /api/v2 <- .path(CarResourceV2.class)
-	- /cars/3794bab4-a59f-47a6-a4fb-da597d46f782 <- .path(CarResourceV2.class, "getCar").build(car.getId());
 
