@@ -205,7 +205,16 @@ public class CarResourceV2 {
 			final Specification spec = new Specification();
 			spec.setColor(strColor == null 
 				? defaultColor : Color.valueOf(strColor));
-			spec.setEngineType(EngineType.valueOf(strEngineType));
+			
+			EngineType engineType = EngineType.UNKNOWN;
+			try {
+				engineType = EngineType.valueOf(strEngineType);
+			} catch (Exception e) {
+				LOGGER.severe("Engine type - \'" 
+				+ strEngineType + "\' not valid.");
+			}
+			spec.setEngineType(engineType);
+			
 			final Car car = carManufacturer.createCar(spec);
 			final URI uri = uriInfo.getBaseUriBuilder()
 				.path(CarResourceV2.class)

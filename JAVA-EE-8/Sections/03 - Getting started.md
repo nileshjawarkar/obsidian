@@ -216,10 +216,13 @@ public class CarFactory {
 
 8) InvalidEngine class
 ``` java
-package com.nilesh.jawarkar.learn.javaee8.boundry;
+package com.nilesh.jawarkar.learn.javaee8.entity;
 
-public class InvalidEngine extends Exception {
+public class InvalidEngine extends RuntimeException {
 	private static final long serialVersionUID = 1L;
+	public InvalidEngine(String message) {
+		super(message);
+	}
 }
 ```
 
@@ -234,6 +237,7 @@ import com.nilesh.jawarkar.learn.javaee8.entity.Color;
 import com.nilesh.jawarkar.learn.javaee8.entity.EngineType;
 import com.nilesh.jawarkar.learn.javaee8.entity.InvalidEngine;
 import com.nilesh.jawarkar.learn.javaee8.entity.Specification;
+import com.nilesh.jawarkar.learn.javaee8.entity.InvalidEngine;
 
 public class CarManufacturer {
 	CarFactory        carFactory;
@@ -246,8 +250,10 @@ public class CarManufacturer {
 	}
 
 	public Car createCar(final Specification spec) {
-		if (spec.getEngineType() == EngineType.UNKNOWN)
-			throw new InvalidEngine();
+		if (spec.getEngineType() == null 
+		|| spec.getEngineType() == EngineType.UNKNOWN)
+			throw new InvalidEngine("Engine type not supported.");
+			
 		final Car car = carFactory.createCar(spec);
 		carRepository.save(car);
 		return car;
