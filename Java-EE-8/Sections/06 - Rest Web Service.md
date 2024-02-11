@@ -265,7 +265,7 @@ Server: Apache TomEE
 ["3794bab4-a59f-47a6-a4fb-da597d46f782"]
 ```
 
-**UriInfo** : An instance of `UriInfo` can be injected as field or method parameter using the @Context annotation. UriInfo provides access to application and request URI information.
+**UriInfo** : An instance of `UriInfo` can be injected as field using the @Context annotation. UriInfo provides access to application and request URI information.
 
 In above example, url is created as shown & explained below.
 ``` java

@@ -9,7 +9,6 @@ public Car createCar(final Specification spec) {
 	
 	final Car car = carFactory.createCar(spec);
 	carRepository.save(car);
-	carCreatedEvent.fire(new CarCreated(car.getId()));
 	return car;
 }
 ```
@@ -121,7 +120,6 @@ public Car createCar(final Specification spec) {
 	
 	final Car car = carFactory.createCar(spec);
 	carRepository.save(car);
-	carCreatedEvent.fire(new CarCreated(car.getId()));
 	return car;
 }
 ```

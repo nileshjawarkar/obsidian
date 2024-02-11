@@ -16,7 +16,7 @@ import jakarta.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AppConfig {
-@Nonbinding
+    @Nonbinding
 	String value();
 }
 ```
@@ -53,7 +53,7 @@ public class ConfigExposer {
 			.getAnnotation(AppConfig.class).value();
 		String value = "";
 		if(key != null && !key.equals("")) {
-		value = configProperties.getProperty(key);
+			value = configProperties.getProperty(key);
 		}
 		return value;
 	}

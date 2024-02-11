@@ -291,54 +291,126 @@ public class CarCache {
 - When we want to move api execution out off event thread, we can do it in following ways...
 
 1) **Using Asynchronous EJB** - Just need to make sure resource class is EJB and mark api/method with @Asynchronous annotation.
-2) **Using CompletableFuture OR AsyncResponse** - Following example demonstrate usage of both.
+2) **Using AsyncResponse** and **CompletionStage** - In following example, we will see usage of the both. Please note that calling these async-api's from the client, will work as it is, no specific change is required.
+
 ``` java
-package com.nilesh.jawarkar.learn.javaee8.boundry;
-
+package com.nnj.learn.javaee8.rest;
 import java.util.List;
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import com.nilesh.jawarkar.learn.javaee8.entity.Car;
-import com.nilesh.jawarkar.learn.javaee8.entity.Specification;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.ws.rs.container.Suspended;
-import javax.ws.rs.container.AsyncResponse;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.inject.Inject;
+import javax.json.*;
+import javax.json.stream.JsonCollectors;
+import javax.validation.constraints.NotNull;
 
-@Path("cars")
+import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.*;
+
+import com.nnj.learn.javaee8.boundry.CarManufacturer;
+import com.nnj.learn.javaee8.entity.*;
+
+@Path("v3/cars")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class CarResource1 {
+public class CarResourceV3 {
+	static final Logger LOGGER = 
+		Logger.getLogger(CarResourceV3.class.getName());
+	
 	@Inject
 	CarManufacturer carManufacturer;
+	@Context
+	UriInfo uriInfo;
+	@Inject
+	Color defaultColor;
 	@Resource
 	ManagedExecutorService mes;
 	
-	@POST
-	public void createCar(@Valid @NotNull final Specification specs,
-		@Suspended final AsyncResponse response) {
-		this.mes.execute(() -> 
-			response.resume(this.carManufacturer.createCar(specs)));
+	@GET
+	public CompletionStage<Response> getCars(@QueryParam("attr") 
+		@DefaultValue("") final String filterByAttr,
+		@QueryParam("value") @DefaultValue("") final String filterByValue) {
+		return CompletableFuture.supplyAsync(() -> {
+			final List<Car> cars = carManufacturer.retrieveCars(
+				filterByAttr, filterByValue);
+			if (cars == null || cars.size() == 0) {
+				return Response.noContent().build();
+			}
+			
+			LOGGER.info("Number of cars - " + cars.size());
+			JsonArray jsonArray = cars.stream().map(car -> 
+				Json.createValue(car.getId()))
+			.collect(JsonCollectors.toJsonArray());
+			return Response.ok().entity(jsonArray).build();
+		}, mes);
 	}
 	
 	@GET
-	public CompletionStage<List<Car>> retrieveCars01() {
-		return CompletableFuture.supplyAsync(() -> 
-			this.carManufacturer.retrieveCars(), this.mes);
+	@Path("{id}")
+	public Response getCar(@PathParam("id") @DefaultValue("zyx") String id) 
+	{
+		Car car = carManufacturer.retrieveCar(id);
+		if (car == null) {
+			return Response.noContent().build();
+		}
+		JsonObject jsonObj = Json.createObjectBuilder()
+			.add("color", car.getColor().name())
+			.add("engineType", car.getEngineType().name())
+			.add("id", car.getId())
+			.build();
+		return Response.ok().entity(jsonObj).build();
+	}
+		
+	@POST
+	public void createCar(@NotNull final JsonObject jsonSpec, 
+		@Suspended AsyncResponse response) {
+		//-- Inside MES thread we can not access uriInfo. So creating a
+		//-- carUrl here and passing it as arg. Latter IIDD will be replaced
+		//-- by actual car-id.
+		final String tmpCarUrl = uriInfo.getBaseUriBuilder()
+			.path(CarResourceV3.class)
+			.path(CarResourceV3.class, "getCar")
+			.build("CARID").toString();
+			
+		mes.execute(() -> {
+			response.resume(createCar(jsonSpec, tmpCarUrl));
+		});
+	}
+	
+	Response createCar(JsonObject jsonSpec, final String tmpCarUrl) {
+		final String strColor = (jsonSpec.containsKey("color") ? 
+			jsonSpec.getString("color") : null);
+		final String strEngineType = (jsonSpec.containsKey("engineType") ?
+			jsonSpec.getString("engineType") : null);
+		
+		if (strEngineType != null) {
+			final Specification spec = new Specification();
+			EngineType engineType = EngineType.UNKNOWN;
+			try {
+				engineType = EngineType.valueOf(strEngineType);
+			} catch (Exception e) {
+				LOGGER.severe("Engine type - \'" + strEngineType 
+					+ "\' not valid.");
+			}
+			
+			spec.setEngineType(engineType);
+			spec.setColor(strColor == null ? defaultColor : 
+				Color.valueOf(strColor));
+			final Car car = carManufacturer.createCar(spec);
+			String newCarURL = tmpCarUrl.replace("CARID", car.getId());
+			return Response.status(Response.Status.CREATED)
+				.header("location", 
+					newCarURL).entity(car).build();
+		}
+		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
 }
 ```
 
 **Note** -
  - On calling "response.resume" execution resumes. In our case, we called it using "ManagedExecutorService" so execution will done in separate thread pool ,specific to "ManagedExecutorService".
- - "CompletableFuture.supplyAsync" - by default use JDK threads which is prohibited by Java EE specs. In our case we supplied "ManagedExecutorService" as a second argument to avoid the same.
+ - "CompletableFuture.supplyAsync" - by default JDK threads will be used, which is prohibited by Java EE specs. In our case we supplied "ManagedExecutorService" as a second argument to avoid the same.

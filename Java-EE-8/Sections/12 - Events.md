@@ -130,5 +130,3 @@ public class CarCreationListener {
 }
 
 ```
-
-### Conditional events (TODO) ...
