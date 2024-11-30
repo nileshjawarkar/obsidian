@@ -5,7 +5,9 @@
 	- the objects require some custom initialisation that is not performed by the bean constructor
 - @Produces - Annotation can used to decorate the method, filed to mark them as producer.
 
-In "CarResourceV2", we are using some Color as defaultColor. But Color is Enum not a bean. In such cases, we can use producers. Here we created a class with method which is marked with Produces annotation.
+In "CarResourceV2", we are using some Color RED as default color. We can inject that default color using CDI, but note that Color is Enum not a bean. In such cases, we can use producers to produce those default values. 
+
+Here we created a class with method which is marked with Produces annotation.
 
 ``` java
 package com.nnj.learn.javaee8.control;
@@ -29,7 +31,31 @@ Color defaultColor;
 //-- Color defaultColor = Color.RED;
 ```
 
-But in this case, we have to generated one default value, what if we need to generate multiple. In such cases we need to combine it with qualifiers. It can be name qualifier provided by JavaEE or we can create one custom qualifier.
+In this case, we have generated one default value. But what if we need to generate multiple values as shown in case below. We can not do this because it will cause ambiguity for container/server which leads to the deployment failure.
+
+``` java
+package com.nnj.learn.javaee8.control;
+
+import com.nnj.learn.javaee8.entity.Color;
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
+
+public class DefaultColorProducer {
+	@Produces
+	public Color getDefaultColor() {
+		return Color.RED;
+	}
+	
+	@Produces
+	public Color getSpeatialEditionColor() {
+		return Color.BLUE;
+	}
+}
+```
+
+In such cases we need to combine producer with qualifier. 
+- It can be named qualifier provided by JavaEE or 
+- we can create one custom qualifier.
 
 **Named qualifier** - We can combine Named qualifier with producer to generate required value. Lets modify the example we seen earlier to produce multiple values but qualified with named qualifier .
 
@@ -55,7 +81,7 @@ public class DefaultColorProducer {
 }
 ```
 
-Now "DefaultColorProducer" generate 2 values, due to this we need to modify "CarResourceV2" to inject the default color.
+Now "DefaultColorProducer" implementation generates 2 values and we can modify "CarResourceV2" to inject the default color as follows -
 
 ``` java
 @Inject
@@ -63,11 +89,10 @@ Now "DefaultColorProducer" generate 2 values, due to this we need to modify "Car
 Color defaultColor;
 ```
 
-We qualified the value to be injected using named qualifier. If we dont do it, web-app container will complain and deployment will fail.
+One problem with named qualifier is that it is not type safe. To manage this injection in type safe way, we need to define custom qualifier.
 
-**Custom Qualifier** -
-We can do the same thing using custom/user defined qualifier. Lets see how to do it.
-Define custom qualifier -
+**Custom Qualifier** - Lets define a custom qualifier "SpeatialEditionColor" as follows
+
 ``` java
 package com.nnj.learn.javaee8.control;
 
