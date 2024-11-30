@@ -19,8 +19,8 @@ persistence.xml - Basic configuration required to use HSQLDB
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
 <persistence-unit name="prod" transaction-type="JTA">
-<!-- <exclude-unlisted-classes>false</exclude-unlisted-classes> -->
-<class>com.nilesh.jawarkar.learn.javaee8.entity.Car</class>
+<!-- <exclude-unlisted-classes>false</exclude-unlisted-classes> 
+<class>com.nilesh.jawarkar.learn.javaee8.entity.Car</class> -->
 <properties>
 <property
 	name="javax.persistence.schema-generation.database.action"

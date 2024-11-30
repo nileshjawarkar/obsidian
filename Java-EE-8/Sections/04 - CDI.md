@@ -1,32 +1,12 @@
-- CDI (Contexts and Dependency Injection) is a standard dependency injection framework included in Java EE 6 and higher. 
+- CDI (Contexts and Dependency Injection) is a standard dependency injection framework included in JavaEE 6 and higher. 
 - **Dependency injection** is a design pattern in which an object or function receives other objects or functions that it depends on. 
 - A form of inversion of control, dependency injection aims to separate the concerns of constructing objects and using them, leading to loosely coupled programs.
 
-### Bean discovery
-
-- File "bean.xml" is used to configure bean discovery mode. 
-- Bean discovery mode tells the container how to manage the beans. In simple words, bean discovery mode defines which bean can be injected.
-	- By default, only "annotated" bean can be injected. It means only those bean can be injected, which are marked with some CDI or EJB annotations. We will go through these annotation in separate section "Scopes".
-	- all - Manage all the beans
-	- none - CDI disabled
-
-Sample beans.xml file - This bean.xml sets discovery mode to all, it means any bean can be injected including those which didn't have any annotations.
-
-``` xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
-bean-discovery-mode="all">
-</beans>
-```
-
-*Note* - Save this bean.xml to "WEB-INF" directory of web-app.
-### Injection
+### Now modify our code to use CDI
 
 The _@Inject_ annotation is CDI's actual workhorse. It allows us to define injection points in the client classes.
 
-We can modify "CarManufacturer" class to use CDI.
+We can modify "CarManufacturer" class to use CDI and inject "CarFactory" and "CarRepository". But how sever knows to inject which instance - we will discuss it in next section.
 
 ``` java
 package com.nilesh.jawarkar.learn.javaee8.boundry;
@@ -81,6 +61,25 @@ public class CarManufacturer {
 }
 ```
 
+### Bean discovery mode - controls the behaviour of CDI in JavaEE and con be configured using "beans.xml"
+
+- Bean discovery mode tells the container how to manage the beans. In simple words, bean discovery mode defines which bean can be injected.
+	- By default, only "annotated" bean can be injected. It means only those bean can be injected, which are marked with some CDI or EJB annotations. We will go through these annotation in separate section "Scopes".
+	- all - All bean can be injected.
+	- none - CDI disabled
+
+ In our code example, CarRepository and CarFactory didn't have any annotation on it. So to make its injection possible, we need to set discovery mode to "all" using beans.xml as shown below. 
+
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
+bean-discovery-mode="all">
+</beans>
+```
+
+*Note* - Save this bean.xml to "WEB-INF" directory of web-app.
 ### Managing ambiguity
 
 - Currently in our project "CarRepository" interface has only one implementation. It is basically in memory store. It means when we restart our app, data hold by this implementation will be lost.  But in coming days when we start exploring persistence, we will create new implementation of "CarRepository", which will write data to some DB.

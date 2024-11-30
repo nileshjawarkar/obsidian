@@ -1,4 +1,4 @@
-### Native query in EJB
+k### Native query in EJB
 
 - Native queries will not work in EJB, as each EJB method already has transaction started. JPA will not allow native query during the active transaction
 - For using native query in EJB method, disable the transaction by marking that method with `@Transactional(value = TxType.NOT_SUPPORTED)`
