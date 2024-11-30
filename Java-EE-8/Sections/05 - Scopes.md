@@ -11,7 +11,7 @@ Scope defines the duration within which bean hold its state. In other words scop
 - _@Statefull_ bean - These bean available to user session, so we can add user specific data to it.
 - _@Singleton_ bean - This bean is created 1  for application and available for all users. Each method is synchronised.
 
-*When to use CDI scope annotations and when to EJB annotations? EJB annotations will provide many features (such as transaction management) as compare  to CDI annotations, so in turn it makes them a little heavy. When you don't need these features, in that case you can go for CDI annotations.*
+*When to use CDI scope annotations and when to EJB annotations? EJB annotations will provide many features (such as transaction management) as compare  to CDI annotations, so in turn it makes them a little heavy. When you don't need these features, in that case you can go for CDI annotations. If needed on CDI beans, you can enable features like transactions using specific annotations (like @Transactional).*
 
 In case of out current implementation, lets discuss some classes and apply scope annotation to them -
 
@@ -19,10 +19,10 @@ In case of out current implementation, lets discuss some classes and apply scope
 
 - We want only once instance of class "CarRepository", so that can it can share its state with other sessions.
 - If we use, CDI session scope, data created by one user will not available for other user.
-- So it means we have to options, CDI ApplicationScoped annotation OR EJB Singleton annotation. One problem with ApplicationScoped annotation, it will not be default provide any concurrency management but EJB Singleton will provide it. In case of ApplicationScoped annotation, we have to explicitly manage it.
+- So it means we have 2 options, CDI ApplicationScoped annotation OR EJB Singleton annotation. One problem with ApplicationScoped annotation, by default it will not provide any concurrency management but Singleton will provide it. In case of ApplicationScoped annotation, we have to explicitly manage it.
 - In addition to concurrency management, singleton also provide transaction management, which is also a required feature for our "CarRepository".
 - So singleton is best suited to our need.
-- But remember it need to be applied on implementation "CarRepositoryInMemImpl"
+- But remember, it need to be applied on implementation "CarRepositoryInMemImpl"
 
 ``` java
 package com.nnj.learn.javaee8.control;
@@ -101,6 +101,8 @@ public class CarRepositoryInMemImpl implements CarRepository {
 }
 ```
 
+*In above code we used @PostConstruct, @PreDestroy annotations. These are life-cycle related annotations and will execute that marked method during the specific life-cycle phase of the bean*
+
 **CarManufacturer** -
 
 - This class didn't store any state.
@@ -155,10 +157,9 @@ public class CarManufacturer {
 
 **CarFactory** -
 
-- It create Car instance, which is in memory.
-- Very lite in functionality.
+- It just create Car instance.
 - I think dependant or request scope is best suited in this case.
-- Let make it dependant scope (which is any way default scope), it mean its scope is depend on its user bean.
+- Lets make it dependant scope (which is any way default scope), it mean its scope is depend on its user bean (its scope depends on the bean  in which it is injected).
 
 ``` java
 package com.nnj.learn.javaee8.control;
