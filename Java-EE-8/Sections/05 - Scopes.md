@@ -2,8 +2,8 @@ Scope defines the duration within which bean hold its state. In other words scop
 
 ### CDI scopes
 - _@Dependant_ - default. It means bean life-cycle depends on the bean in which it is injected.
-- _@RequestScoped_ - Bean with this scope, will created and destroyed per request from user.
-- _@SessionScoped_ - Bean with this scope, will live with the current user session and destroyed when session ends.
+- _@RequestScoped_ - Bean with this scope, will be created and destroyed per request.
+- _@SessionScoped_ - Bean with this scope, will live with the current user session and will be destroyed only when session ends.
 - _@ApplicationScoped_ - Bean with this scope, will be created once in application life-cycle and shared with all the sessions.
 
 ### EJB scopes
