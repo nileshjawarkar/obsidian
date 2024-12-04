@@ -33,23 +33,23 @@ In this example, we will be using default realm, which uses tomcat-users.xml as 
 ### Now configure your webapp using web.xml to use this user/role
 
 ``` xml
-   <security-constraint>
-      <web-resource-collection>
-         <web-resource-name>My App</web-resource-name>
-         <url-pattern>/api/*</url-pattern>
-         <http-method>GET</http-method>
-         <http-method>POST</http-method>
-      </web-resource-collection>
-      <auth-constraint>
-         <role-name>app-admin</role-name>
-      </auth-constraint>
-      <user-data-constraint>
-         <transport-guarantee>NONE</transport-guarantee>
-      </user-data-constraint>
-   </security-constraint>
-   <login-config>
-      <auth-method>BASIC</auth-method>
-   </login-config>
+<security-constraint>
+  <web-resource-collection>
+	 <web-resource-name>My App</web-resource-name>
+	 <url-pattern>/api/*</url-pattern>
+	 <http-method>GET</http-method>
+	 <http-method>POST</http-method>
+  </web-resource-collection>
+  <auth-constraint>
+	 <role-name>app-admin</role-name>
+  </auth-constraint>
+  <user-data-constraint>
+	 <transport-guarantee>NONE</transport-guarantee>
+  </user-data-constraint>
+</security-constraint>
+<login-config>
+  <auth-method>BASIC</auth-method>
+</login-config>
 ```
 
 To configure the app 
