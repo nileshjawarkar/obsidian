@@ -1,5 +1,5 @@
 
-### Enable SSO in server.xml - Uncomment following line
+### 1) Enable SSO in server.xml - Uncomment following line
 
 ``` xml
 <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
@@ -7,7 +7,7 @@
 
 - TomEE contains a processing pipeline, which is a chain of processes that will be executed per request to produce the response. These processes are the Tomcat’s [valves](https://tomcat.apache.org/tomcat-10.0-doc/config/valve.html#Introduction). 
 - For instance, the SSO on Tomcat is implemented as a valve.
-### Configure Realm - Realm basically controls, the way credentials repository is used to validate the user.
+### 2) Configure Realm - Realm basically controls, the way credentials repository is used to validate the user.
 
 In this example, we will be using default realm, which uses tomcat-users.xml as credential repository.
 
@@ -23,14 +23,14 @@ In this example, we will be using default realm, which uses tomcat-users.xml as 
 </GlobalNamingResources>
 ```
 
-### Add role and user to the tomcat-users.xml
+### 3) Add role and user to the tomcat-users.xml
 
 ``` xml
 <role rolename="app-admin" />
 <user username="user1" password="user1123" roles="app-admin" />
 ```
 
-### Now configure your webapp using web.xml to use this user/role
+### 4) Now configure your webapp using web.xml to use this user/role
 
 ``` xml
 <security-constraint>
@@ -56,7 +56,7 @@ To configure the app
 - We need to define security constraint with the url to protect and role defined in the realm.
 - Define login config with auth method.. in this case BASIC.
 
-### Use curl to access "localhost:8080/api/prj1/cars"
+### 5) Use curl to access "localhost:8080/api/prj1/cars"
 
 - Encode use and password using base64 encoding
 ``` sh
@@ -106,4 +106,6 @@ Server: Apache TomEE
 
 ## Links
 
-https://www.baeldung.com/apache-tomcat-sso#Tomcat-Web-Apps-Configurations
+- https://www.baeldung.com/apache-tomcat-sso#Tomcat-Web-Apps-Configurations
+- https://github.com/apache/tomcat/tree/main/java/org/apache/catalina/realm
+
