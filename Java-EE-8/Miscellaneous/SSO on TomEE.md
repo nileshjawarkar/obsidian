@@ -5,6 +5,8 @@
 <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
 ```
 
+- TomEE contains a processing pipeline, which is a chain of processes that will be executed per request to produce the response. These processes are the Tomcat’s [valves](https://tomcat.apache.org/tomcat-10.0-doc/config/valve.html#Introduction). 
+- For instance, the SSO on Tomcat is implemented as a valve.
 ### Configure Realm - Realm basically controls, the way credentials repository is used to validate the user.
 
 In this example, we will be using default realm, which uses tomcat-users.xml as credential repository.
