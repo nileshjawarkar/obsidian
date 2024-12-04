@@ -102,3 +102,8 @@ Server: Apache TomEE
 
 [{"color":"BLACK","engineType":"DIESEL","identifier":"611cbd91-d2e4-4c16-b2f4-a9abb0de4614"},{"color":"RED","engineType":"PETROL","identifier":"6d4a5911-881a-4f03-b27d-dce02ec37f2f"}]
 ```
+
+
+## Links
+
+https://www.baeldung.com/apache-tomcat-sso#Tomcat-Web-Apps-Configurations
