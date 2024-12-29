@@ -8,3 +8,4 @@
 - [CheatSheet](https://computingforgeeks.com/virsh-commands-cheatsheet/)
 - [Setup](https://joshrosso.com/docs/2020/2020-05-06-linux-hypervisor-setup/)
 - [virt-install examples](https://kb.novaordis.com/index.php/Virt-install_Examples)
+- [cloud-init](https://sumit-ghosh.com/posts/create-vm-using-libvirt-cloud-images-cloud-init/)

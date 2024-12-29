@@ -1,3 +1,0 @@
-- Ref URLS
-	- https://www.baeldung.com/java-9-http-client
-	- https://reflectoring.io/comparison-of-java-http-clients/
