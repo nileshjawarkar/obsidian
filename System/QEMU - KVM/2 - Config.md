@@ -79,10 +79,10 @@ brctl show
 Create `bridge.conf` to set an ACL telling QEMU that the `virbr0` interface should be whitelisted. By default all the rest is blacklisted.
 
 ```sh
-mkdir -p /etc/qemu
-echo "allow virbr0" > /etc/qemu/bridge.conf
-chown root:kvm /etc/qemu/bridge.conf
-chmod 0660 /etc/qemu/bridge.conf
+sudo mkdir -p /etc/qemu
+sudo echo "allow virbr0" > /etc/qemu/bridge.conf
+sudo chown root:kvm /etc/qemu/bridge.conf
+sudo chmod 0660 /etc/qemu/bridge.conf
 ```
 
 
