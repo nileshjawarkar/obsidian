@@ -1,7 +1,7 @@
 
 Service provides single IP address and domain (gateway) for multiple replicas of the pod (endpoints) and serve as a load balancer and help pod's to scale.
 
-![[Pasted image 20230504223729.png]]
+![[images/Pasted image 20230504223729.png]]
 
 Lets discuss some terminologies : 
 - Service  - Gateway that forward request to the endpoint

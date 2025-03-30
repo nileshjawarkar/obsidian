@@ -9,7 +9,7 @@ The four main options we'll be comparing here are: **ClusterIP**, **NodePort**, 
 - LoadBalancer type service provides load balancer and it  is a extension of NodePort service.
 - Problem with LoadBalancer service is that it need load balancer for each service, on the other hand Ingress can use single ingress resource with different routing rules to expose multiple services. Which make it less resource intensive.
 
-![[Pasted image 20230515202631.png]]
+![[images/Pasted image 20230515202631.png]]
 
 
 ### Installation  &  Configuration
