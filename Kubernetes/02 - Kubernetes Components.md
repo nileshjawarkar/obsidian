@@ -1,6 +1,5 @@
 ![[images/Pasted image 20230430223642.png]]
 
-
 ## Control Plane Components
 
 The control plane's components make global decisions about the cluster (for example, scheduling), as well as detecting and responding to cluster events (for example, starting up a new [pod](https://kubernetes.io/docs/concepts/workloads/pods/) when a deployment's `replicas` field is unsatisfied).

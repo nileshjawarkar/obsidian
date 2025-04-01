@@ -11,7 +11,7 @@ ls -al ~/.ssh
 
 # Create new key
 cd ~/.ssh
-ssh-keygen -t ed25519 -C "jawarkar.nilesh@gmail.com"
+ssh-keygen -t ed25519 -C "xxx.xxx@gmail.com"
 ```
 
 **Take backup of generated keys, so that it can be used in future.**
