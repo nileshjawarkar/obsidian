@@ -9,17 +9,28 @@ The four main options we'll be comparing here are: **ClusterIP**, **NodePort**, 
 - LoadBalancer type service provides load balancer and it  is a extension of NodePort service.
 - Problem with LoadBalancer service is that it need load balancer for each service, on the other hand Ingress can use single ingress resource with different routing rules to expose multiple services. Which make it less resource intensive.
 
+
 ![[images/Pasted image 20230515202631.png]]
 
 
-### Installation  &  Configuration
+### Installation  &  Configuration 
 
-- If load balancer is not installed, then we need to define the port forwarding from master
+- Please check Installation instruction for Ingress and Metallb load balancer at [[Adons Installation]]
+- If load balancer is not installed, then we need to define the port forwarding from master.  Port forwarding is used to link local-port to the pods/service-port.
+
 ``` sh
-
 kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8080:80
+
+# Other examples of port forwarding
+# kubectl port-forward <Kubenetes Object>/<ObjectName> <LocalPort>:<TargetPort>
+
+# Example 1
+kubectl port-forward pod/nginx-pod 8080:80
+
+# Example 2
+kubectl port-forward deployment/mydeployment 5000:6000
 ```
-- Please check Installation instruction for Ingress and Metallb load balancer at [[Adons Instalations]]
+
 
 - Check object created after install
 ``` sh
