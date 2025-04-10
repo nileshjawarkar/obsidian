@@ -1,7 +1,7 @@
 
 Service provides single IP address and domain (gateway) for multiple replicas of the pod (endpoints) and serve as a load balancer and help pod's to scale.
 
-![[images/Pasted image 20230504223729.png]]
+![img1](../images/img20230504223729.png)
 
 Lets discuss some terminologies : 
 - Service  - Gateway that forward request to the endpoint
@@ -318,7 +318,7 @@ service "nginx-service" deleted
 
 ### Type of Service 
 
-![[Pasted image 20230506184952.png]]
+![img2](../images/img20230506184952.png)
 #### 1) ClusterIP 
 - This is the default type of service in Kubernetes. 
 - It creates a service which can be accessed by other applications in the kubernetes cluster, without allowing external access.
