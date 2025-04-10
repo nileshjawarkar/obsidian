@@ -6,7 +6,7 @@
 - Desired state - Required number of replica's that must be running.
 - Current state - Actual number of replica's currently running.
 
-![repsetimg](images/img20230503135324.png)
+![repsetimg](../../../../images/img20230503135324.png)
 
 
 - As show in above snap, when any pod is down which result is current state (2) which is not a desired state (3), then ReplicaSet will start new pod in order to maintain desire state.
