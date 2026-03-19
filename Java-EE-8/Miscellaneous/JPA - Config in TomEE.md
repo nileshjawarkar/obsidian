@@ -45,6 +45,20 @@
 </tomee>
 ```
 
+- Example 04 - H2 DB
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+<tomee>
+    <Resource id="jdbc/carman_managed" type="DataSource">
+        JdbcDriver = org.h2.Driver
+        JdbcUrl = jdbc:h2:file:./carman
+        UserName = sa
+        Password = sa
+        jtaManaged = true
+    </Resource>
+</tomee>
+```
+
 2) **Use resource in - `META-INF/persistence.xml`**
 - Example 01
 ``` xml

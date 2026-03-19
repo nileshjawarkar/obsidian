@@ -61,7 +61,7 @@ import javax.persistence.Table;
 @Table(name = "cars")
 public class Car {
 	@Id
-	private String             id;
+	private String  id;
 
 	@Column(name = "engine")
 	@Enumerated(EnumType.STRING)
@@ -105,6 +105,7 @@ public class Car {
 ```
 
 - ### Customising table & column name
+
 Optionally, 
 1) we can provide custom table name to be used for entity using _@Table_ annotation. By default it will be entities name (class name).
 2) we can provide custom column name  for field using _@Column_ annotation. Other than name, this annotation supports following attributes - unique, length, nullable, updatable etc.
@@ -288,28 +289,157 @@ public class Car extends BaseEntity {
 
 ## Relationship
 
-- ### Directionality
+- **Directionality**
 
 1) The direction of a relationship can be either bidirectional or unidirectional
 2) A bidirectional relationship has both an owning side and an inverse side.
 3) A unidirectional relationship has only an owning side.
 4) The owning side of a relationship determines how the Persistence runtime makes updates to the relationship in the database.
 
-- ### Cardinality & Ordinality
+- **Cardinality & Ordinality**
 
 1) Cardinality specifies how many instances of an entity relate to one instance of another entity. 
 2) Ordinality is also closely linked to cardinality. While cardinality specifies the occurrences of a relationship, ordinality describes the relationship as either mandatory or optional
 3) In other words, cardinality specifies the maximum number of relationships and ordinality specifies the absolute minimum number of relationships.
-4) There are three main types of relationships in a database expressed using cardinality notation -
-	- One-To-One
-	- One-To-Many & Many-To-One
-	- Many-To-Many
-5) JPA specifies to more relationship
-	- Embedded
-	- ElementCollection
 
-- ### One-To-One
+### Unidirectional Associations
 
+Unidirectional associations are commonly used in object-oriented programming to establish relationships between entities. In a unidirectional association, only one entity holds a reference to the other.
+
+To define a unidirectional association in Java, we can use annotations such as _@ManyToOne_, _@OneToMany_, _@OneToOne_, and _@ManyToMany_. By using these annotations, we can create a clear and well-defined relationship between two entities in our code.
+
+
+#### OneToMany
+
+- In a one-to-many relationship, an entity has a reference to one or many instances of another entity.
+- In this example of Car, take a example of Seats. One car has many seats.
+
+Lets modify our implementation ...
+
+Seat.java
+``` java
+package com.nnj.learn.jee.entity;
+
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "seats")
+public class Seat {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    private SeatMaterial material;
+    @Embedded
+    private SeatBelt belt;
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(final Long id) {
+        this.id = id;
+    }
+    public SeatMaterial getMaterial() {
+        return material;
+    }
+    public void setMaterial(final SeatMaterial material) {
+        this.material = material;
+    }
+    public SeatBelt getBelt() {
+        return belt;
+    }
+    public void setBelt(final SeatBelt belt) {
+        this.belt = belt;
+    }
+}
+```
+
+Car.java
+``` java
+package com.nnj.learn.jee.entity;
+
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "cars")
+public class Car {
+    //-- @GeneratedValue(strategy = GenerationType.AUTO)
+    //-- @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    //-- @GeneratedValue(strategy = GenerationType.UUID)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    //-- private UUID id;
+
+    @Column(name = "color")
+    @Enumerated(EnumType.STRING)
+    private Color color;
+
+    @Column(name = "engine")
+    @Enumerated(EnumType.STRING)
+    private EngineType engineType;
+
+    @OneToMany(targetEntity = Seat.class, cascade = CascadeType.ALL, 
+	    fetch = FetchType.LAZY)
+    private List<Seat> seats;
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(final Long id) {
+        this.id = id;
+    }
+    public Color getColor() {
+        return color;
+    }
+    public void setColor(final Color color) {
+        this.color = color;
+    }
+    public EngineType getEngineType() {
+        return engineType;
+    }
+    public void setEngineType(final EngineType engineType) {
+        this.engineType = engineType;
+    }
+    @Override
+    public String toString() {
+        return "Car {id=" + id + ", color=" + color 
+        + ", engineType=" + engineType + "}";
+    }
+    public List<Seat> getSeats() {
+        return seats;
+    }
+    public void setSeats(final List<Seat> seats) {
+        this.seats = seats;
+    }
+}
+```
+
+In this case, OneToMany annotation indicate to ORM ..
+- Car has many  seats and car is owner of this relationship.
+- But how this relationship is managed on DB level? Basically in two ways 
+	- *Join table* - Here ORM creates separate table which joins both the tables. In this table, each row holds id of car and id of seat, which link them together.
+	- *Join column* - In this case, ORM creates a column seat table and it points to car. This column basically indicate which car owns this seat instance.
+- By-default ORM use join-table. So it will creates tables like this...
 
 
 

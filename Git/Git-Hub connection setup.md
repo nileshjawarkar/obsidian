@@ -29,3 +29,6 @@ git config --global user.name "Your Name"
 ```
 
 **Now we are ready to work with our git-hub account**
+
+### Note -
+- Do above steps before repository clone
