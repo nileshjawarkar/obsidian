@@ -1,4 +1,4 @@
-![img](images/image20230430223642.png)
+![img](../images/image20230430223642.png)
 
 ## Control Plane Components
 
