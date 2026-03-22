@@ -2,12 +2,14 @@
 	- List all the local images
 - docker image pull IMAGE-NAME
 	- Download image from repository
-- docker run --name CONTAINER_NAME IMAGE-NAME -it CMD_TO_RUN
+- docker run -it  --name CONTAINER_NAME IMAGE-NAME CMD_TO_RUN
 	- Create container and run the specified command
 	- Example
 		- docker run --name ubuntu-serv ubuntu:latest -it /bin/bash
 - ctrl + p + q
 	- Exit the container without killing it
+- docker run -it --rm --name CONTAINER_NAME IMAGE-NAME CMD_TO_RUN
+	- Create container and run the specified command and kill container after exit.
 - docker exec -it CONTAINER_NAME CMD_TO_RUN
 - docker exec -it --user USER_NAME CONTAINER_NAME CMD_TO_RUN
 	- Execute perticular cmd in container
